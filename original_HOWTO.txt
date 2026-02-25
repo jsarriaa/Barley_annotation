@@ -1,0 +1,668 @@
+
+# Divide fasta in chromosomes
+awk '/^>/{s=substr($1,2); close(f); f=s".fasta"} {print > f}' GDB_136.fa 
+
+# Prepare Isoseq data (bam) into fasta
+samtools fasta Isoseq/CP851-002P0001/cell/CP851-002P0001.ccs.bam > GDB136_Isoseq.fa
+
+# Script to transform fastq of mRNA seq of a folder into fastas 
+scratch/GDB136/annotation/mRNA-seq$ bash process_rnaseq.sh
+
+# TE elements
+
+DTA.pl --version
+
+#########################################################
+##### Extensive de-novo TE Annotator (EDTA) v2.2.2  #####
+##### Shujun Ou (shujun.ou.1@gmail.com)             #####
+#########################################################
+
+EDTA.pl --genome genome/chr1H.fasta --species barley --anno 1 --overwrite 1 --sensitive 1 --threads 32
+# also with bash EDTA_run.sh edditing parameters
+
+# STAR
+
+STAR --version
+2.7.11b
+
+bash run_STAR.sh
+# and all output moved to /genome/STAR
+
+# miniprot index
+miniprot --version
+0.18-r281
+
+bash run_miniprot.sh
+
+# minimap2 index
+minimap2 --version
+2.30-r1287
+
+bash run_minimap2_index.sh
+
+# indexing fasta with samtools
+samtools --version
+samtools 1.22.1
+Using htslib 1.22.1
+
+bash run_indexfasta.sh
+
+# Aligning mRNA with STAR
+bash run_STAR_mapping.sh 
+
+# Merging STARs outputs
+bash run_merge_STAR_bams.sh
+
+# Portcullis to filter and analyze splice junctions
+# But, needs a new environment out of barley_annotation, so:
+conda create -n portcullis_env python=3.8 -c bioconda -c conda-forge
+conda activate portcullis_env
+conda install portcullis
+
+portcullis --version                                                                                                          
+portcullis 1.2.4                                                 
+
+bash run_portcullis_prep.sh
+
+bash run_portcullis_filter.sh
+
+# Run stringtie
+# First come back to 
+conda activate barley_annotation
+
+stringtie --version
+3.0.1
+
+bash run_stringtie.sh
+
+bash run_merge_stringtie.sh 
+
+# Come back to:
+conda activate portcullis_env
+
+bash run_juntools_filter.sh
+
+
+# We have to download the uniref50_plants fasta file, so getting it from uniprot:
+
+wget https://ftp.uniprot.org/pub/databases/uniprot/current_release/uniref/uniref50/uniref50.fasta.gz 
+
+gunzip uniref50.fasta.gz
+
+# conda new for mikado (giving lots of hedaches)
+
+conda create --name mikado_env -c bioconda -c conda-forge python=3.10 mikado=2.3.4 sqlalchemy=1.4.41
+
+Mikado v2.3.4
+
+bash run_mikado_configure.sh
+
+bash run_mikado_prepare.sh
+
+# Running prodigal
+prodigal
+PRODIGAL v2.6.3 [February, 2016]         
+
+bash run_prodigial.sh
+
+# Run diamond
+
+diamond --version
+diamond version 2.1.13
+
+diamond makedb --in uniref50.fasta -d uniref50.fasta.dmnd
+
+bash run_diamond.sh
+
+# Moving to the env created with the env yml file of the repo:
+conda activate pananno
+
+bash run_mikado_serialise.sh
+
+# You must add to the yaml file the correct paths (sometimes skips the fcking GDB_136...)
+# Very important to use ABSOLUTE PATHS
+nano transcripts/GDB_136.mikado.config.yaml
+# Check how are there: transcripts/GDB_136.mikado.config.yaml
+
+bash run_mikado_pick.sh
+
+# Now writing the cds using:
+gffread --version
+0.12.7
+
+bash run_write_cds.sh
+
+# And saving also in AA
+bash run_cds2aa.sh
+
+#######
+# Finished the steps of transcripts.smk 
+# Starting to map the Iso-seq long reads (file minimap2.smk)
+#######
+
+# Flowchart:
+Reference Proteins ──► Miniprot ──► Scorer ──► Prothints ──┐
+                                                           │
+RNA-Seq ──► Sort/Filter ──► bam2hints/filter/wig2hints ────┼─► Combine All Hints
+                                                           │
+IsoSeq ──► blat2hints  ────────────────────────────────────┤
+                                                           │
+TE Annotations ──► EDTA2hints ─────────────────────────────┘
+
+# Summary
+Source				Step(s)					Output(s)
+----------------------------------------------------------------------------------------------------------------
+Protein (REFPROT)		miniprot, scorer, prothints, join	miniprot.hints.gff
+RNA-Seq (RNASEQ)		sort/filter/bam2hints/wig2hints		intron_hints.flt.gff, ep_hints.gff, etc.
+IsoSeq (ISOSEQ)			blat2hints				hints.isoseq.mm2.gff
+TE (EDTA)			EDTA2hints				hints.EDTA.gff
+All				combine_all_hints			hints.all_combined.gff
+
+
+
+
+bash run_build_minimap2_index.sh
+
+bash run_Isoseq_minimap2.sh
+[M::main] Real time: 38691.757 sec; CPU: 1227970.453 sec; Peak RSS: 33.160 GB
+
+bash run_bam2gff.sh
+
+### Isues
+[M::mp_idx_restore@3.329*1.00] loaded the index
+[M::mp_idx_print_stat] 2409796 distinct k-mers; mean occ of infrequent k-mers: 755.17; 9338 frequent k-mers accounting for 316193550 occurrences
+[morecore] insufficient memory
+### Complains about low memory (not true)
+
+# Trying to split the fasta prot ref:
+bash split_fasta.sh uniref50.fasta 25
+miniprot -t --gff genome/GDB_136.mpi uniref50.part_01.fasta miniprot/part1.gff
+
+# Even spliting in 200 parts is providing same errors.
+# It must be at the index building, too heavy?
+
+# Lets try with an smaller set, filtred by poaceas provided by Thomas lux:
+
+https://rest.uniprot.org/uniref/stream?compressed=true&download=true&format=fasta&query=%28%28identity%3A0.5%29+AND+%28taxonomy_id%3A38820%29%29
+
+miniprot -t 1 --gff genome/GDB_136.mpi uniref_tax38820_id0.5.fasta > miniprot/GDB_136.prots.miniprot.gff
+
+[M::worker_pipeline::75282.838*1.00] mapped 3916 sequences
+[M::main] Version: 0.13-r248
+[M::main] CMD: miniprot -t 1 --gff genome/GDB_136.mpi uniref_tax38820_id0.5.fasta
+[M::main] Real time: 75282.873 sec; CPU: 75290.171 sec; Peak RSS: 18.823 GB
+
+# And done. Carry on next step
+# Running hints, from snakemake (with miniprot)
+bash ./scripts/run_hints_miniprot.sh 
+
+# Downloading miniprot-boundary-scorer
+git clone https://github.com/tomasbruna/miniprot-boundary-scorer.git
+cd miniprot-boundary-scorer
+make
+
+bash scripts/run_score_miniprot.sh
+
+# Now install miniprothint
+git clone https://github.com/tomasbruna/miniprothint.git
+
+bash scripts/run_hints_miniprot_2.sh 
+
+# Install GALBA to have acces to aln2hins.pl
+
+git clone https://github.com/Gaius-Augustus/GALBA/tree/main
+
+run_aln2hints.sh
+
+bash scripts/run_aln2hints_hc.sh 
+
+# Get Augustus to run join_mult_hits.pl
+git clone https://github.com/Gaius-Augustus/Augustus/
+
+bash scripts/run_join_prothints.sh
+
+#####
+# Now working with m-RNA seq back
+##### 
+
+bash scripts/run_sortBambyreads.sh
+
+
+
+# Ensure filterBam is installed
+conda install augustus # Has filterBam inside
+
+bash scripts/run_filterbam.sh
+# And sort it:
+bash scripts/run_sort_flt_bam.sh
+
+# From Augustus
+bash scripts/run_bam2hints.sh
+
+### 
+# Errors related with chr naming:
+# Fasta has the chrXH sampleName=GDB....
+# While the hint stuff is only chrXH...
+###
+
+# We are generating a intermediate modified fasta, and then removing it
+
+# From GALBA folder
+bash scripts/run_filterIntronsFindStrand.sh
+
+wget https://raw.githubusercontent.com/MikeAxtell/bam2wig/master/bam2wig -O scripts/bam2wig
+samtools index -c genome/STAR/GDB_136_allsamples.flt.s.bam
+bash scripts/bam2wig.sh
+
+bash scripts/run_wig2hints.sh
+
+bash scripts/run_merge_extrinsic_hints.sh
+
+bash scripts/run_blat2hints.sh
+
+## Integrating EDTA
+bash scripts/run_merge_EDTA.sh
+python3 scripts/run_EDTA2hints.py 
+
+### MERGING ALL
+bash scripts/run_combine_all_hints.sh
+
+#####################
+#####################
+# Now lets go fo "abinitio.smk" rule, which takes the combined hint file and process it with augustus
+#####################
+#####################
+
+bash scripts/abinitio_setup.sh
+# Once again take care of the name of chromosomes
+
+# We are using the rules of the snakemake that work with chr partitions, and not contigs
+# And wait cose youre facing incompatibility issues:
+augustus
+augustus: error while loading shared libraries: libboost_iostreams.so.1.60.0: cannot open shared object file: No such file or directory
+
+# Creating a new conda for this steps:
+conda activate augustus
+# And ensure the proper config for barley:
+### !!! 
+# Actually using wheat configuration, since Thomas said us differences with a built for barley dataset
+
+bash scripts/run_agustus.sh 
+
+# Took several days (more than a week to run all genes, more than 9)k. Following the pipeline:
+bash scripts/run_combine_augustus.sh 
+
+# created scripts/extract_supported.py
+# which will be used in:
+
+bash scripts/run_extract_supported.sh
+
+# Now there is an step which i dont think is necessary
+# Extract supported prots but from another program (tsebra) which is the same as done with augusts
+# I will do it anyway, so installing it:
+
+conda activate pananno
+(pananno) jsarria@esplandian:/scratch/GDB136/annotation$ conda install tsebra
+
+which tsebra.py
+/scratch/software-phgv2/miniconda3/envs/pananno/bin/tsebra.py
+# using this path
+
+
+# forgot to run an step here, so rerun all from here but first:
+
+bash scripts/run_tsebra.sh
+
+bash scripts/run_tsebra2gff3.sh 
+
+bash scripts/run_tsebra_selection.sh
+
+tail -f logs/GDB_136.augustus.tsebra.log
+1. Running TSEBRA to select best transcripts...
+### READING GENE PREDICTION: [GDB_136/augustus.hints.all_combined.gff]
+### READING EXTRINSIC EVIDENCE: [GDB_136/hints.all_combined.gff]
+Traceback (most recent call last):
+  File "/scratch/software-phgv2/miniconda3/envs/pananno/bin/tsebra.py", line 235, in <module>
+    main()
+  File "/scratch/software-phgv2/miniconda3/envs/pananno/bin/tsebra.py", line 84, in main
+    evi.add_hintfile(h)
+  File "/scratch/software-phgv2/miniconda3/envs/pananno/bin/evidence.py", line 116, in add_hintfile
+    hintfile = Hintfile(path_to_hintfile)
+  File "/scratch/software-phgv2/miniconda3/envs/pananno/bin/evidence.py", line 80, in __init__
+    self.read_file(path)
+  File "/scratch/software-phgv2/miniconda3/envs/pananno/bin/evidence.py", line 93, in read_file
+    new_hint = Hint(line)
+  File "/scratch/software-phgv2/miniconda3/envs/pananno/bin/evidence.py", line 39, in __init__
+    self.score = float(self.score)
+ValueError: could not convert string to float: '.'
+ERROR: TSEBRA failed (Step 1). Check log for details.
+
+# Error, so updating the script to subsitute those float values
+
+# Now run succesfully
+
+#####
+# Start with the combine_predictions.smk
+#####
+
+# Had to install EVM, from the source:
+wget https://github.com/EVidenceModeler/EVidenceModeler/releases/download/EVidenceModeler-v2.1.0/EVidenceModeler-v2.1.0.tar.gz
+# untar and update the path of the tools on the following scripts:
+
+bash scripts/run_convert_suppported2EVM.sh
+
+bash scripts/run_convert_augustus2EVM.sh 
+
+bash scripts/run_convert_TSEBRA2EVM.sh
+
+bash scripts/run_convert_miniport2EVM_ALN.sh
+
+# Out of transcripts rule
+scripts/run_convert_stringtie2EVM.sh 
+
+#From run_mikado_pick.sh
+bash scripts/run_combine_augustus_mikado2EVM.sh
+
+bash scripts/run_write_weights.sh
+
+bash scripts/run_runEVM.sh
+
+bash scripts/run_removeELM.sh
+
+bash scripts/run_write_tbl.sh
+
+bash scripts/run_mikado_configure2.sh
+
+
+# At this pint we do have:
+EVM GFF3
+Mikado-refined GFFs
+CDS/AA fastas
+
+# Time to get Helixer combined predictions
+# From helixer.smk rule:
+
+bash scripts/run_split_genome.sh
+
+# first we need to install helixer
+# https://github.com/usadellab/Helixer/blob/main/docs/manual_install.md
+git clone https://github.com/weberlab-hhu/Helixer.git
+# And created environment
+
+conda activate helixer
+# bash scripts/run_helixer.sh
+# Running individual commands instead
+
+Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/chr1H.fa --gff-output-path GDB_136/GDB_136.chr1H.helixer.gff --peak-threshold 0.9 --species GDB_136
+# But is complaining not plant_model is included
+# wget https://zenodo.org/records/10836346/files/land_plant_v0.3_m_0100.h5?download=1
+# Download the file
+--> 
+
+Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/chr1H.fa --gff-output-path GDB_136/GDB_136.chr1H.helixer.gff --peak-threshold 0.9 --species GDB_136
+
+Total: 33085525bp across 3844 windows
+
+Helixer successfully finished the annotation of GDB_136/genome_chunks/chr1H.fa in 2.79 hours. GFF file written to GDB_136/GDB_136.chr1H.helixer.gff.
+
+# So continue with the rest of chr
+Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/chr2H.fa --gff-output-path GDB_136/GDB_136.chr2H.helixer.gff --peak-threshold 0.9 --species GDB_136
+
+#####################
+#####################
+#####################
+# Thomas sais the scripts where wrong about the helixir and the combine script... So all redoo from here:
+
+bash scripts/run_combine_helixer.sh
+# Change back to pananno conda
+bash scripts/run_write_cds_helixer.sh
+bash scripts/run_write_proteins_helixer.sh
+
+# Then, come back to combine_predictions...
+# rerun:
+bash scripts/run_convert_suppported2EVM.sh
+bash scripts/run_convert_TSEBRA2EVM.sh
+bash scripts/run_convert_augustus2EVM.sh
+
+# Those are new:
+bash scripts/run_convert_helixer2EVM.sh
+bash scripts/run_combine_abinitio_evm.sh
+
+===========================================================
+wc -l GDB_136/evm.abinitio_gene_predictions.gff
+2872028 GDB_136/evm.abinitio_gene_predictions.gff
+
+cat GDB_136/evm.abinitio_gene_predictions.gff | grep Augustus | wc -l
+829494
+
+cat GDB_136/evm.abinitio_gene_predictions.gff | grep AUGSUPP | wc -l
+464554
+
+cat GDB_136/evm.abinitio_gene_predictions.gff | grep Mikado | wc -l
+476273
+
+cat GDB_136/evm.abinitio_gene_predictions.gff | grep TSEBRA | wc -l
+593665
+
+cat GDB_136/evm.abinitio_gene_predictions.gff | grep HELIXER | wc -l
+458330
+===========================================================
+
+# Come back to old scripts
+bash scripts/run_convert_miniport2EVM_ALN.sh
+bash scripts/run_convert_stringtie2EVM.sh
+# (not even sure if needed to rerun all this but whocares)
+
+bash scripts/run_write_weights2.sh
+# be careful this is the file 2, updated with weights for helixer
+
+bash scripts/run_runEVM.sh
+# Reused script but changing the run to number 2
+
+* [Mon Nov 17 14:15:53 2025] Running CMD: /scratch/GDB136/annotation/EVidenceModeler-v2.1.0/EvmUtils/gff3_file_to_proteins.pl GDB_136.run2.EVM.gff3 /scratch/PHG_barleymap/Med11/data/GDB_136.fa prot > GDB_136.run2.EVM.pep
+Use of uninitialized value $orient in pattern match (m//) at /scratch/GDB136/annotation/EVidenceModeler-v2.1.0/EvmUtils/../PerlLib/Gene_obj.pm line 444.
+Error, orient not [+-]  at /scratch/GDB136/annotation/EVidenceModeler-v2.1.0/EvmUtils/../PerlLib/Gene_obj.pm line 444.
+        Gene_obj::build_gene_obj_exons_n_cds_range(Gene_obj=HASH(0x560cee5be380), ARRAY(0x560cee5b4ca8), 23378389, 23378389, undef) called at /scratch/GDB136/annotation/EVidenceModeler-v2.1.0/EvmUtils/../PerlLib/GFF3_utils.pm line 186
+
+# Thomas said is a usual bug. Try to rerun removing the --report_ELM at the script:
+#Bug still:
+awk '($3 ~ /gene|mRNA|CDS/) && ($7 !~ /[\+\-]/)' GDB_136/GDB_136.run2.EVM.gff3 | head
+chr6H   EVM_elm gene    2096077 2096077 .       0       .       ID=evm.TU.chr6H.34;Name=EVM%20prediction%20chr6H.34
+chr6H   EVM_elm mRNA    2096077 2096077 .       0       .       ID=evm.model.chr6H.34;Parent=evm.TU.chr6H.34;Name=EVM%20prediction%20chr6H.34
+chr6H   EVM_elm CDS     2096077 2096077 .       0       1       ID=cds.evm.model.chr6H.34;Parent=evm.model.chr6H.34
+chr6H   EVM_elm gene    12793777        12793777        .       0       .       ID=evm.TU.chr6H.286;Name=EVM%20prediction%20chr6H.286
+chr6H   EVM_elm mRNA    12793777        12793777        .       0       .       ID=evm.model.chr6H.286;Parent=evm.TU.chr6H.286;Name=EVM%20prediction%20chr6H.286
+chr6H   EVM_elm CDS     12793777        12793777        .       0       1       ID=cds.evm.model.chr6H.286;Parent=evm.model.chr6H.286
+
+#So Thomas says:
+"grep -Pv \"\tEVM_elm\t\" {input.evm} > {output.evm} “  to remove all EVM_elm lines
+
+# But i will just delete those corrupted lines:
+awk '! ( ($3 ~ /gene|mRNA|CDS/) && ($7 !~ /[\+\-]/) )' GDB_136/GDB_136.run2.EVM.gff3 > GDB_136/GDB_136.run2.EVM_fixed.gff3
+# And edit the script to run with the fixed file.
+
+# Actually this all is useless since you are gonna remove all EVM_elm lines in next rule:
+bash scripts/run_removeELM.sh
+
+# Keep going, take care is new scripts, older (without _2) have not in mind helixer
+bash scripts/run_write_tbl_2.sh
+
+# This one is the old 
+conda activate mikado_env
+bash scripts/run_mikado_configure.sh
+
+bash scripts/run_mikado_prepare.sh 
+bash scripts/run_prodigial.sh
+
+conda activate pananno
+bash scripts/run_diamond.sh
+
+bash scripts/run_mikado_serialise.sh
+# Error: It complains about pandas dependency. Something must be wrong about its version.
+conda install pandas=1.3.5
+
+bash scripts/run_mikado_pick.sh
+# En el yaml cambio el output para que no de problemas
+
+conda activate pananno
+bash scripts/run_write_cds2.sh
+
+bash scripts/run_write_proteins.sh
+
+# Several lines like this:
+Warning: Skipping mikado.chr6HG2019.2. Length (1177) is not a multiple of 3.
+Warning: Skipping mikado.chr6HG2024.1. Length (289) is not a multiple of 3.
+Warning: Skipping mikado.chr6HG2195.1. Length (551) is not a multiple of 3.
+Warning: Skipping mikado.chr6HG2576.1. Length (473) is not a multiple of 3.
+Warning: Skipping mikado.chr6HG2615.1. Length (2060) is not a multiple of 3.
+Warning: Skipping mikado.chr6HG2617.1. Length (617) is not a multiple of 3.
+Warning: Skipping mikado.chr6HG2640.1. Length (424) is not a multiple of 3.
+Warning: Skipping mikado.chr6HG2812.1. Length (1144) is not a multiple of 3.
+Warning: Skipping mikado.chr7HG1407.1. Length (229) is not a multiple of 3.
+Warning: Skipping mikado.chr7HG1530.1. Length (271) is not a multiple of 3.
+
+# Actually those:
+cat GDB_136/GDB_136.mikado_refined_prediction.RUN2.loci.aa.fa | grep ">" -c
+27040
+(pananno) jsarria@esplandian:/scratch/GDB136/annotation$ cat GDB_136/GDB_136.mikado_refined_prediction.RUN2.loci.cds.fa | grep ">" -c
+27175
+
+######
+######
+###### 
+
+# The whole pipeline should be done :)
+
+cat final_results/GDB_136.mikado_refined_prediction.RUN2.loci.gff3 | grep "gene" -c
+24384
+
+cat final_results/GDB_136.mikado_refined_prediction.RUN2.loci.cds.fa | grep ">" -c
+27175
+
+cat final_results/GDB_136.mikado_refined_prediction.RUN2.loci.aa.fa | grep ">" -c
+27040
+
+# several lines like:
+Warning: Skipping mikado.chr6HG2195.1. Length (551) is not a multiple of 3.
+
+cat final_results/GDB_136.mikado_refined_prediction.RUN2.loci.metrics.tsv | wc -l
+28842
+
+cat final_results/GDB_136.mikado_refined_prediction.RUN2.loci.scores.tsv | wc -l
+28842
+
+# to check numbers of isoforms:
+tail -n +2 final_results/GDB_136.mikado_refined_prediction.RUN2.loci.metrics.tsv | awk '{print $1}' | awk -F'.' '{print $NF}' | sort -n | uniq -c | sort -nr
+  24384 1
+   3261 2
+    772 3
+    224 4
+     91 5
+     37 6
+     21 7
+     14 8
+     10 9
+      8 10
+      6 11
+      3 13
+      3 12
+      2 14
+      1 19
+      1 18
+      1 17
+      1 16
+      1 15
+
+
+#####
+# Thomas says is expected 30-31k genes, so checking quality
+####
+
+busco -i GDB_136/GDB_136.mikado_refined_prediction.RUN2.loci.aa.fa -o busco_GDB136_anno -l poales_odb12 -m proteins -c 32
+        C:90.2%[S:76.6%,D:13.5%],F:0.7%,M:9.1%,n:6282      
+        5665    Complete BUSCOs (C)                        
+        4814    Complete and single-copy BUSCOs (S)        
+        851     Complete and duplicated BUSCOs (D)         
+        44      Fragmented BUSCOs (F)                      
+        573     Missing BUSCOs (M)                         
+        6282    Total BUSCO groups searched                
+
+# Also for other predicts:
+gffread -g /scratch/PHG_barleymap/Med11/data/GDB_136.fa GDB_136/GDB_136.helixer.combined.gff3 -y GDB_136/GDB_136.helixer.combined.faa
+busco -i GDB_136/GDB_136.helixer.combined.faa -o busco_GDB136_anno_helixer -l poales_odb12 -m proteins -c 32
+        C:97.2%[S:95.4%,D:1.8%],F:1.3%,M:1.5%,n:6282       
+        6104    Complete BUSCOs (C)                        
+        5993    Complete and single-copy BUSCOs (S)        
+        111     Complete and duplicated BUSCOs (D)         
+        82      Fragmented BUSCOs (F)                      
+        96      Missing BUSCOs (M)                         
+        6282    Total BUSCO groups searched      
+
+
+
+gffread -g /scratch/PHG_barleymap/Med11/data/GDB_136.fa GDB_136/augustus.hints.all_combined.supported.gff3 -y GDB_136/augustus.hints.all_combined.supported.faa
+busco -i GDB_136/augustus.hints.all_combined.supported.faa -o busco_GDB136_anno_augustus -l poales_odb12 -m proteins -c 32
+        C:88.6%[S:76.0%,D:12.6%],F:3.1%,M:8.4%,n:6282      
+        5564    Complete BUSCOs (C)                        
+        4774    Complete and single-copy BUSCOs (S)        
+        790     Complete and duplicated BUSCOs (D)         
+        192     Fragmented BUSCOs (F)                      
+        526     Missing BUSCOs (M)                         
+        6282    Total BUSCO groups searched                
+
+###
+# We are moving forward:
+# Thomas: I think the loss of gene models is caused by mikado discarding too many models due to low blast results.
+# So we are running mikado with  sprot_plant database.
+###
+
+cd sprot_plants_mikado_db
+diamond makedb --in uniprot_sprot_plants.fasta --db uniprot_sprot_plants.fasta.dmnd
+
+# From combine predictions:
+
+../EVidenceModeler-v2.1.0/EvmUtils/misc/augustus_GFF3_to_EVM_GFF3.pl ../GDB_136/augustus.hints.all_combined.supported.gff3 | sed 's/Augustus/AUGSUPP/' > ../GDB_136/evm.abinitio.supported.gff
+# Actually this was redundant
+
+# TSEBRA2EVM skip
+# augustus2EVM skip
+# helixer2EVM skip
+# combine_augustus_mikado2EVM skip
+# convert_miniport2EVM_ALN skip
+# convert_stringtie2EVM skip
+# write_weights skip
+# runEVM skip
+# removeELM skip
+
+cd ..
+bash scripts
+bash scripts/run_create_mikado_tbl_updated.sh
+
+mikado configure --list sprot_plants_mikado_db/GDB_136.mikado.tbl --reference genome/GDB_136.fa --mode permissive --scoring plant.yaml --copy-scoring plant.yaml -bt sprot_plants_mikado_db/uniprot_sprot_plants.fasta --junctions GDB_136/portcullis/portcullis.flt.pass.junctions.bed -od sprot_plants_mikado_db/ sprot_plants_mikado_db/GDB_136.mikado.config.yaml
+
+mikado prepare -p 8 --out sprot_plants_mikado_db/mikado_prepared.gtf --out_fasta sprot_plants_mikado_db/mikado_prepared.fasta --json-conf sprot_plants_mikado_db/GDB_136.mikado.config.yaml
+
+diamond blastx --threads 32 --query sprot_plants_mikado_db/mikado_prepared.fasta  --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore ppos btop --max-target-seqs 10 --matrix blosum62 --evalue 1.0e-03 --db sprot_plants_mikado_db/uniprot_sprot_plants.fasta.dmnd --salltitles --sensitive --compress 1 --out sprot_plants_mikado_db/blast_sensitive.mikado_transcripts.tsv.gz
+
+# ensure to switch among the proper condas mikado_env and pananno
+
+mikado serialise -p 8 --json-conf sprot_plants_mikado_db/GDB_136.mikado.config.yaml --tsv sprot_plants_mikado_db/blast_sensitive.mikado_transcripts.tsv.gz --orfs sprot_plants_mikado_db/mikado_transcripts.orfs.gff --transcripts sprot_plants_mikado_db/mikado_prepared.fasta --blast_targets sprot_plants_mikado_db/uniprot_sprot_plants.fasta --junctions GDB_136/portcullis/portcullis.flt.pass.junctio
+ns.bed sprot_plants_mikado_db/mikado.db
+
+mikado pick -p 8 \
+  --json-conf sprot_plants_mikado_db/GDB_136.mikado.config.yaml \
+  -db sprot_plants_mikado_db/mikado.db \
+  --monoloci-out GDB_136.mikado_refined_prediction.run3.monoloci.gff3 \
+  --loci-out GDB_136.mikado_refined_prediction.run3.loci.gff3 \
+  -od sprot_plants_mikado_db/
+
+grep $'\tgene' sprot_plants_mikado_db/GDB_136.mikado_refined_prediction.run3.loci.gff3 -c
+74122
+
+gffread -g genome/GDB_136.fa sprot_plants_mikado_db/GDB_136.mikado_refined_prediction.run3.loci.gff3 -x sprot_plants_mikado_db/GDB_136.mikado_refined_prediction.run3.loci.cds.fa
+
+bash scripts/run_write_proteins_sprot_plants.sh
+
+busco -i sprot_plants_mikado_db/GDB_136.mikado_refined_prediction.run3.loci.aa.fa -o busco_GDB136_anno_mikado_sprot -l poales_odb12 -m proteins -c 32
+C:96.9%[S:90.3%,D:6.7%],F:1.4%,M:1.7%,n:6282
+
