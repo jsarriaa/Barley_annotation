@@ -76,7 +76,40 @@ awk '/^>/{s=substr($1,2); close(f); f=s".fasta"} {print > f}' ../data/GDB_136.fa
 # Prepare environment for huge part of the pipeline
 ```
 mkdir scripts
-wget https://raw.githubusercontent.com/PGSB-HMGU/pananno/main/environment.yml -O scripts/environment.yml
+wget https://raw.githubusercontent.com/jsarriaa/Barley_annotation/blob/main/environment.yml -O scripts/environment.yml
 conda env create -f scripts/environment.yml
 ```
 
+# Prepare mRNA-seq data
+```
+conda activate pananno_jsarria
+cd data/
+bash ../scripts/process_rnaseq.sh
+# ...
+# Combining all individual FASTA files...
+# Successfully created combined file: combined_mrna_transcripts.fa
+# The file contains this many sequences:
+# 1674071604
+# Script finished.
+rm *fq.gz
+```
+
+
+# Prepare EDTA environment
+```
+conda create -n EDTA_env -c conda-forge -c bioconda edta=2.2.2 -y
+EDTA.pl --version
+
+#########################################################
+##### Extensive de-novo TE Annotator (EDTA) v2.2.2  #####
+##### Shujun Ou (shujun.ou.1@gmail.com)             #####
+#########################################################
+```
+
+######
+Section for TE elements
+######
+```
+conda activate EDTA_env
+nohup bash scripts/run_edta.sh > logs/EDTA/run_edta.log 2>&1 &
+```
