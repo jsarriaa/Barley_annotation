@@ -111,5 +111,25 @@ Section for TE elements
 ######
 ```
 conda activate EDTA_env
+
+check dependencies:
+gt -version
+gt (GenomeTools) 1.6.5
+
+# If:
+ltr_finder
+Illegal instruction
+# You will haev to compile from source:
+
+git clone https://github.com/xzhub/LTR_Finder.git
+cd LTR_Finder/source
+make
+cp ltr_finder $CONDA_PREFIX/bin/
+cd ../..
+rm -rf LTR_Finder
+
+ltr_finder -h    
+ltr_finder v1.07
+
 nohup bash scripts/run_edta.sh > logs/EDTA/run_edta.log 2>&1 &
 ```
