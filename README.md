@@ -156,28 +156,28 @@ for root, dirs, files in os.walk(root_dir, topdown=False):
         os.rename(old_path, new_path)
 ```
 
-Run STAR
+# Run STAR
 ```
 STAR --version
 2.7.11b
 bash scripts/run_STAR.sh
 ```
 
-Run miniprot
+# Run miniprot
 ```
 miniprot --version
 0.18-r281
 bash scripts/run_miniprot.sh
 ```
 
-Run minimap
+# Run minimap
 ```
 minimap2 --version
 2.30-r1287
 bash scripts/run_minimap2_index.sh
 ```
 
-indexing fasta with samtools
+# indexing fasta with samtools
 ```
 samtools --version
 samtools 1.22.1
@@ -185,6 +185,6 @@ Using htslib 1.22.1
 bash scripts/run_indexfasta.sh
 ```
 
-Aligning mRNA with STAR
+# Aligning mRNA with STAR
 ```
 
