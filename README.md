@@ -59,6 +59,9 @@ lrwxrwxrwx 1 jsarria jsarria  132 Feb 25 11:36 Unknown_CP851-001U0015_good_2.fq.
 -rw-r--r-- 1 jsarria jsarria  462 Feb 25 11:37 sampleName_clientId.txt
 ```
 
+De mientras tengo esto:
+/scratch/GDB136$ ln -s annotation/mRNA-seq/Unknow*fasta new_anno/data/mRNA-seq/
+
 # Split genome assembly by pseudochromosomes and unplaced contigs;
 ```
 mkdir genome_by_contigs
@@ -133,3 +136,55 @@ ltr_finder v1.07
 
 nohup bash scripts/run_edta.sh > logs/EDTA/run_edta.log 2>&1 &
 ```
+
+NOTE: not running all chromosomes again, since there were already done previously with same command. Copying and renamin to fit:
+```
+import os
+
+root_dir = 'EDTA'
+
+# We walk top-down=False so we rename children before parents (like -depth)
+for root, dirs, files in os.walk(root_dir, topdown=False):
+    for name in files + dirs:
+        if name == root_dir or name.startswith('GDB136_'):
+            continue
+        
+        old_path = os.path.join(root, name)
+        new_path = os.path.join(root, f"GDB136_{name}")
+        
+        print(f"Renaming: {name} -> GDB136_{name}")
+        os.rename(old_path, new_path)
+```
+
+Run STAR
+```
+STAR --version
+2.7.11b
+bash scripts/run_STAR.sh
+```
+
+Run miniprot
+```
+miniprot --version
+0.18-r281
+bash scripts/run_miniprot.sh
+```
+
+Run minimap
+```
+minimap2 --version
+2.30-r1287
+bash scripts/run_minimap2_index.sh
+```
+
+indexing fasta with samtools
+```
+samtools --version
+samtools 1.22.1
+Using htslib 1.22.1
+bash scripts/run_indexfasta.sh
+```
+
+Aligning mRNA with STAR
+```
+
