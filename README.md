@@ -187,4 +187,5 @@ bash scripts/run_indexfasta.sh
 
 # Aligning mRNA with STAR
 ```
-
+bash scripts/run_STAR_mapping.sh
+```
