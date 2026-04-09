@@ -59,8 +59,6 @@ lrwxrwxrwx 1 jsarria jsarria  132 Feb 25 11:36 Unknown_CP851-001U0015_good_2.fq.
 -rw-r--r-- 1 jsarria jsarria  462 Feb 25 11:37 sampleName_clientId.txt
 ```
 
-De mientras tengo esto:
-/scratch/GDB136$ ln -s annotation/mRNA-seq/Unknow*fasta new_anno/data/mRNA-seq/
 
 # Split genome assembly by pseudochromosomes and unplaced contigs;
 ```
@@ -161,6 +159,8 @@ for root, dirs, files in os.walk(root_dir, topdown=False):
 STAR --version
 2.7.11b
 bash scripts/run_STAR.sh
+bash scripts/run_STAR_mapping.sh
+bash scripts/run_merge_STAR_bams.sh
 ```
 
 # Run miniprot
@@ -185,7 +185,104 @@ Using htslib 1.22.1
 bash scripts/run_indexfasta.sh
 ```
 
-# Aligning mRNA with STAR
+
+# Portcullis to filter and analyze splice junctions
+
+portcullis --version                                                                                                          
+portcullis 1.2.4
+
+bash scripts/run_portcullis_prep.sh
+bash scripts/run_portcullis_junc.sh
+bash scripts/run_portcullis_filter.sh
+
+#
+
+stringtie --version
+3.0.1
+bash scripts/run_stringtie.sh
+bash scripts/run_merge_stringtie.sh
+
+Filter or markup GTF files (stringtie) based on provided junctions (portcullis)
+junctools --version
+1.2.4
+bash scripts/run_juntools_filter.sh
+
+
+###
+
+wget https://ftp.uniprot.org/pub/databases/uniprot/current_release/uniref/uniref50/uniref50.fasta.gz 
+gunzip uniref50.fasta.gz
+mv uniref50.fasta data/
+
+#conda create --name mikado_env -c bioconda -c conda-forge python=3.10 mikado=2.3.4 sqlalchemy=1.4.41
+mikado --version
+Mikado v2.3.4
+
+mkdir transcripts
+nano transcripts/GDB_136.mikado.tbl
+print: `stringtie/stringtie.merged.junc_flt.gtf	st	True	1	False	True	True`
+bash scripts/run_mikado_configure.sh
+
+And you must get something like:
 ```
-bash scripts/run_STAR_mapping.sh
+grep -v "#" transcripts/GDB_136.mikado.config.yaml
+db_settings:
+  db: mikado.db
+  dbtype: sqlite
+pick:
+  alternative_splicing:
+    pad: true
+  chimera_split:
+    blast_check: true
+    blast_params:
+      leniency: STRINGENT
+    execute: true
+    skip:
+    - false
+  files:
+    input: mikado_prepared.gtf
+    monoloci_out: ''
+    output_dir: transcripts
+    subloci_out: ''
+  run_options:
+    intron_range:
+    - 60
+    - 10000
+  scoring_file: plant.yaml
+prepare:
+  files:
+    exclude_redundant:
+    - true
+    gff:
+    - stringtie/stringtie.merged.junc_flt.gtf
+    labels:
+    - st
+    output_dir: transcripts
+    reference:
+    - false
+    source_score:
+      st: 1.0
+    strand_specific_assemblies:
+    - stringtie/stringtie.merged.junc_flt.gtf
+    strip_cds:
+    - true
+  max_intron_length: 1000000
+  minimum_cdna_length: 200
+  strand_specific: false
+reference:
+  genome: data/GDB_136.fa
+seed: 0
+serialise:
+  codon_table: 0
+  files:
+    blast_targets:
+    - uniref50.fasta
+    junctions:
+    - portcullis/GDB_136.junctions.bed
+    output_dir: transcripts
+    transcripts: mikado_prepared.fasta
+  max_regression: 0.2
+  substitution_matrix: blosum62
+threads: 1
 ```
+
