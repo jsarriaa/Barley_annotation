@@ -300,3 +300,8 @@ diamond version 2.1.13
 
 diamond makedb --in data/uniref50.fasta -d transcripts/uniref50.fasta.dmnd
 bash scripts/run_diamond.sh
+
+# Mikado again
+bash scripts/run_mikado_serialise.sh
+
+Te queda en el siguiente step, edita el yaml y tal
