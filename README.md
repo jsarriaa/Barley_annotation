@@ -285,4 +285,18 @@ serialise:
   substitution_matrix: blosum62
 threads: 1
 ```
+bash scripts/run_mikado_prepare.sh
 
+# Running prodigal
+prodigal
+PRODIGAL v2.6.3 [February, 2016]         
+
+bash scripts/run_prodigal.sh
+
+# Run diamond
+
+diamond --version
+diamond version 2.1.13
+
+diamond makedb --in data/uniref50.fasta -d transcripts/uniref50.fasta.dmnd
+bash scripts/run_diamond.sh
