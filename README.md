@@ -304,4 +304,24 @@ bash scripts/run_diamond.sh
 # Mikado again
 bash scripts/run_mikado_serialise.sh
 
-Te queda en el siguiente step, edita el yaml y tal
+### NOTE: 
+plant.yaml and config file must be upload to this repo, do not forget, silly rat
+
+
+bash scripts/run_mikado_pick.sh
+
+# Now writing the cds using:
+gffread --version
+0.12.7
+
+bash scripts/run_write_cds.sh
+bash scripts/run_cds2aa.sh    #also as AA
+
+# Iso-seq data
+minimap2 --version
+2.26-r1175
+
+mkdir minimap2_index
+minimap2 -d minimap2_index/GDB_136.mmi data/GDB_136.fa > logs/GDB_136.minimap2_idx.log 2>&1 &
+
+bash scripts/run_Isoseq_minimap2.sh
