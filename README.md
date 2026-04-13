@@ -338,3 +338,41 @@ wget -O data/uniref_tax38820_id0.5.fasta.gz "https://rest.uniprot.org/uniref/str
 gunzip data/uniref_tax38820_id0.5.fasta.gz
 
 nohup miniprot -t 32 --gff miniprot/GDB_136.mpi data/uniref_tax38820_id0.5.fasta > miniprot/GDB_136.prots.miniprot.gff 2> logs/GDB_136_miniprot_ref.log &
+
+bash scripts/run_hints_miniprot.sh
+
+[M::main] Version: 0.13-r248
+[M::main] CMD: miniprot -I -u --outn=1 --aln -t 32 miniprot/GDB_136.mpi data/uniref_tax38820_id0.5.fasta
+[M::main] Real time: 3555.146 sec; CPU: 101868.521 sec; Peak RSS: 72.034 GB
+
+End time: lun 13 abr 2026 15:56:00 CEST
+Miniprot alignment completed successfully.
+
+# Downloading miniprot-boundary-scorer
+git clone https://github.com/tomasbruna/miniprot-boundary-scorer.git
+cd miniprot-boundary-scorer && make
+cd ..
+
+bash scripts/run_score_miniprot.sh
+
+# Now install miniprothint
+git clone https://github.com/tomasbruna/miniprothint.git
+
+bash scripts/run_hints_miniprot_2.sh
+
+# Install GALBA to have acces to aln2hins.pl
+git clone https://github.com/Gaius-Augustus/GALBA.git
+# Ojo que realmente esto no lo has usao eh, algo falla
+
+nano bash scripts/run_aln2hints_hc.sh
+
+# Get Augustus to run join_mult_hits.pl
+git clone https://github.com/Gaius-Augustus/Augustus/
+
+bash scripts/run_join_prothints.sh
+
+#####
+# Now working with m-RNA seq back
+##### 
+
+bash scripts/run_sortBambyreads.sh
