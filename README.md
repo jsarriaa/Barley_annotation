@@ -325,3 +325,16 @@ mkdir minimap2_index
 minimap2 -d minimap2_index/GDB_136.mmi data/GDB_136.fa > logs/GDB_136.minimap2_idx.log 2>&1 &
 
 bash scripts/run_Isoseq_minimap2.sh
+
+[M::worker_pipeline::48488.579*31.67] mapped 196011 sequences
+[M::main] Version: 2.26-r1175
+[M::main] CMD: minimap2 -ax splice:hq --junc-bed portcullis/portcullis.flt.pass.junctions.bed --cs=long -t 32 -uf -L --eqx -2 --secondary=no minimap2_index/GDB_136.mmi data/IsoSeq.fa
+[M::main] Real time: 48490.043 sec; CPU: 1535854.341 sec; Peak RSS: 33.319 GB
+Alignment and sorting completed successfully. Output saved to: data/Isoseq_GDB_136_Isoseq.mm2.bam
+
+bash scripts/run_bam2gff.sh
+
+wget -O data/uniref_tax38820_id0.5.fasta.gz "https://rest.uniprot.org/uniref/stream?compressed=true&download=true&format=fasta&query=%28%28identity%3A0.5%29+AND+%28taxonomy_id%3A38820%29%29"
+gunzip data/uniref_tax38820_id0.5.fasta.gz
+
+nohup miniprot -t 32 --gff miniprot/GDB_136.mpi data/uniref_tax38820_id0.5.fasta > miniprot/GDB_136.prots.miniprot.gff 2> logs/GDB_136_miniprot_ref.log &
