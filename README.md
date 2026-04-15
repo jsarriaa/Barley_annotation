@@ -376,3 +376,7 @@ bash scripts/run_join_prothints.sh
 ##### 
 
 bash scripts/run_sortBambyreads.sh
+bash scripts/run_filterbam.sh
+bash scripts/run_sort_flt_bam.sh
+
+bash scripts/run_bam2hints.sh
