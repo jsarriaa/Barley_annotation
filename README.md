@@ -380,3 +380,8 @@ bash scripts/run_filterbam.sh
 bash scripts/run_sort_flt_bam.sh
 
 bash scripts/run_bam2hints.sh
+bash scripts/run_filterIntronsFindStrand.sh
+bash scripts/bam2wig.sh
+bash scrips/run_wig2hints.sh
+bash scripts/run_merge_extrinsic_hints.sh
+bash scripts/run_blat2hints.sh
