@@ -385,3 +385,10 @@ bash scripts/bam2wig.sh
 bash scrips/run_wig2hints.sh
 bash scripts/run_merge_extrinsic_hints.sh
 bash scripts/run_blat2hints.sh
+
+## Integrating EDTA
+bash scripts/run_merge_EDTA.sh
+python3 scripts/run_EDTA2hints.py
+bash scripts/run_combine_all_hints.sh
+All hints combined successfully. Final file: GDB_136/hints.all_combined.gff
+xd
