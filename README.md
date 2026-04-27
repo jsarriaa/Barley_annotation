@@ -391,4 +391,21 @@ bash scripts/run_merge_EDTA.sh
 python3 scripts/run_EDTA2hints.py
 bash scripts/run_combine_all_hints.sh
 All hints combined successfully. Final file: GDB_136/hints.all_combined.gff
+
+###
+# Now working with abinitio
+###
+
+bash scripts/abinitio_setup.sh
+
+augustus
+AUGUSTUS (3.5.0) is a gene prediction tool.
+Sources and documentation at https://github.com/Gaius-Augustus/Augustus
+
+# Ten en cuenta que has de referenciar bien la descarga del repo de Thomas para que tenga acceso a ficheros como:
+# EXTRINSIC_CFG="pananno/extrinsic.cfg"
+
+nohup bash scripts/run_augustus.sh > scripts/augustus_progress.log 2>&1 &
+Puedes ir monitorizando:
+TOTAL=9252; DONE=$(find new_anno/GDB_136/abinitio/ -name "*.gff" -type f -not -empty | wc -l); PERC=$(awk "BEGIN {printf \"%.2f\", $DONE*100/$TOTAL}"); echo "Progress: $DONE / $TOTAL ($PERC%)"
 xd
