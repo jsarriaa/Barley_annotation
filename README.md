@@ -406,6 +406,36 @@ Sources and documentation at https://github.com/Gaius-Augustus/Augustus
 # EXTRINSIC_CFG="pananno/extrinsic.cfg"
 
 nohup bash scripts/run_augustus.sh > scripts/augustus_progress.log 2>&1 &
-Puedes ir monitorizando:
-TOTAL=9252; DONE=$(find new_anno/GDB_136/abinitio/ -name "*.gff" -type f -not -empty | wc -l); PERC=$(awk "BEGIN {printf \"%.2f\", $DONE*100/$TOTAL}"); echo "Progress: $DONE / $TOTAL ($PERC%)"
-xd
+#Monitorizing:
+#TOTAL=9252; DONE=$(find new_anno/GDB_136/abinitio/ -name "*.gff" -type f -not -empty | wc -l); PERC=$(awk "BEGIN {printf \"%.2f\", $DONE*100/$TOTAL}"); echo "Progress: $DONE / $TOTAL ($PERC%)"
+
+bash scripts/run_combine_augustus.sh
+
+#Check existing: 
+scripts/extract_supported.py
+
+bash scripts/run_extract_supported.sh
+
+#Add properly to the script tsebra:
+which tsebra.py
+
+bash scripts/run_tsebra.sh
+bash scripts/run_tsebra2gff3.sh
+#Same here, fix the path:
+bash scripts/run_tsebra_selection.sh
+
+
+
+
+
+
+# Start with the combine_predictions.smk
+
+wget https://github.com/EVidenceModeler/EVidenceModeler/releases/download/EVidenceModeler-v2.1.0/EVidenceModeler-v2.1.0.tar.gz
+# untar and update the path of the tools on the following scripts:
+tar -xvf EVidenceModeler-v2.1.0.tar.gz
+
+bash scripts/run_convert_suppported2EVM.sh
+bash scripts/run_convert_augustus2EVM.sh
+
+
