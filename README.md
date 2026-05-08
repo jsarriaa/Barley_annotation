@@ -438,4 +438,12 @@ tar -xvf EVidenceModeler-v2.1.0.tar.gz
 bash scripts/run_convert_suppported2EVM.sh
 bash scripts/run_convert_augustus2EVM.sh
 
+bash scripts/run_convert_TSEBRA2EVM.sh
+bash scripts/run_convert_miniport2EVM_ALN.sh
+bash scripts/run_convert_stringtie2EVM.sh
+bash scripts/run_combine_augustus_mikado2EVM.sh
+bash scripts/run_write_weights.sh
+bash scripts/run_runEVM.sh
+bash scripts/run_removeELM.sh
+bash scripts/run_write_tbl.sh
 
