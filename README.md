@@ -446,4 +446,34 @@ bash scripts/run_write_weights.sh
 bash scripts/run_runEVM.sh
 bash scripts/run_removeELM.sh
 bash scripts/run_write_tbl.sh
+bash scripts/run_mikado_configure2.sh
 
+bash scripts/run_split_genome.sh
+
+# first we need to install helixer
+# https://github.com/usadellab/Helixer/blob/main/docs/manual_install.md
+git clone https://github.com/weberlab-hhu/Helixer.git
+# And created environment
+conda activate helixer
+conda install -c conda-forge hdf5=1.10.6 -y
+# Download plant_model
+# wget https://zenodo.org/records/10836346/files/land_plant_v0.3_m_0100.h5?download=1
+mv 'land_plant_v0.3_m_0100.h5?download=1' land_plant_v0.3_m_0100.h5
+
+#If: 
+Testing whether helixer_post_bin is correctly installed
+helixer_post_bin: error while loading shared libraries: libhdf5.so.103: cannot open shared object file: No such file or directory
+
+#Try:
+find $CONDA_PREFIX -name "libhdf5.so.103"
+/scratch/software-phgv2/miniconda3/envs/helixer/lib/libhdf5.so.103
+#And:
+export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
+
+nohup Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/GDB136_chr1H.fa --gff-output-path GDB_136/GDB_136.chr1H.helixer.gff --peak-threshold 0.9 --species GDB_136 > logs/GDB_136.helixer_chr1H.log 2>&1 &
+nohup Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/GDB136_chr2H.fa --gff-output-path GDB_136/GDB_136.chr2H.helixer.gff --peak-threshold 0.9 --species GDB_136 > logs/GDB_136.helixer_chr2H.log 2>&1 &
+nohup Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/GDB136_chr3H.fa --gff-output-path GDB_136/GDB_136.chr3H.helixer.gff --peak-threshold 0.9 --species GDB_136 > logs/GDB_136.helixer_chr3H.log 2>&1 &nohup Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/GDB136_chr4H.fa --gff-output-path GDB_136/GDB_136.chr4H.helixer.gff --peak-threshold 0.9 --species GDB_136 > logs/GDB_136.helixer_chr4H.log 2>&1 &
+nohup Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/GDB136_chr5H.fa --gff-output-path GDB_136/GDB_136.chr5H.helixer.gff --peak-threshold 0.9 --species GDB_136 > logs/GDB_136.helixer_chr5H.log 2>&1 &
+nohup Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/GDB136_chr6H.fa --gff-output-path GDB_136/GDB_136.chr6H.helixer.gff --peak-threshold 0.9 --species GDB_136 > logs/GDB_136.helixer_chr6H.log 2>&1 &
+nohup Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/GDB136_chr7H.fa --gff-output-path GDB_136/GDB_136.chr7H.helixer.gff --peak-threshold 0.9 --species GDB_136 > logs/GDB_136.helixer_chr7H.log 2>&1 &
+nohup Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/contigs.fa --gff-output-path GDB_136/GDB_136.contigs.helixer.gff --peak-threshold 0.9 --species GDB_136 > logs/GDB_136.helixer_contigs.log 2>&1 &
