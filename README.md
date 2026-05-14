@@ -477,3 +477,53 @@ nohup Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/GDB136_
 nohup Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/GDB136_chr6H.fa --gff-output-path GDB_136/GDB_136.chr6H.helixer.gff --peak-threshold 0.9 --species GDB_136 > logs/GDB_136.helixer_chr6H.log 2>&1 &
 nohup Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/GDB136_chr7H.fa --gff-output-path GDB_136/GDB_136.chr7H.helixer.gff --peak-threshold 0.9 --species GDB_136 > logs/GDB_136.helixer_chr7H.log 2>&1 &
 nohup Helixer.py --lineage land_plant --fasta-path GDB_136/genome_chunks/contigs.fa --gff-output-path GDB_136/GDB_136.contigs.helixer.gff --peak-threshold 0.9 --species GDB_136 > logs/GDB_136.helixer_contigs.log 2>&1 &
+
+bash scripts/run_combine_helixer.sh
+# Change back to pananno conda
+bash scripts/run_write_cds_helixer.sh
+bash scripts/run_write_proteins_helixer.sh
+
+# Then, come back to combine_predictions...
+# rerun:
+bash scripts/run_convert_suppported2EVM.sh
+bash scripts/run_convert_TSEBRA2EVM.sh
+bash scripts/run_convert_augustus2EVM.sh
+
+# Those are new:
+bash scripts/run_convert_helixer2EVM.sh
+bash scripts/run_combine_abinitio_evm.sh
+
+# Come back to old scripts
+bash scripts/run_convert_miniport2EVM_ALN.sh
+bash scripts/run_convert_stringtie2EVM.sh
+# (not even sure if needed to rerun all this but whocares)
+
+bash scripts/run_write_weights2.sh
+bash scripts/run_runEVM.sh
+
+bash scripts/run_removeELM.sh
+
+bash scripts/run_write_tbl_2.sh
+
+conda activate mikado_env
+bash scripts/run_mikado_configure.sh
+
+bash scripts/run_mikado_prepare.sh 
+bash scripts/run_prodigial.sh
+
+conda activate pananno
+bash scripts/run_diamond.sh
+
+bash scripts/run_mikado_serialise.sh
+bash scripts/run_mikado_pick.sh
+
+conda activate pananno
+bash scripts/run_write_cds2.sh
+
+bash scripts/run_write_proteins.sh
+
+
+
+
+
+
