@@ -522,8 +522,27 @@ bash scripts/run_write_cds2.sh
 
 bash scripts/run_write_proteins.sh
 
+cat GDB_136/GDB_136.mikado_refined_prediction.RUN1.loci.aa.fa | grep ">" -c
+27141
+cat GDB_136/GDB_136.mikado_refined_prediction.RUN1.loci.cds.fa | grep ">" -c
+27274
 
+grep "gene" -c mikado/GDB_136.mikado_refined_prediction.RUN1.loci.gff3
+24457
 
+# to check numbers of isoforms:
+tail -n +2 final_results/GDB_136.mikado_refined_prediction.RUN2.loci.metrics.tsv | awk '{print $1}' | awk -F'.' '{print $NF}' | sort -n | uniq -c | sort -nr
+
+#######################
+#######################
+# Thomas: I think the loss of gene models is caused by mikado discarding too many models due to low blast results.
+# So we are running mikado with  sprot_plant database.
+
+wget https://mikado.readthedocs.io/en/stable/_downloads/ddeb548a6ba8c33afdeaf70127bd6f29/uniprot_sprot_plants.fasta.gz -O data/uniprot_sprot_plants.fasta
+
+mkdir sprot_plants_mikado_db
+diamond makedb --in data/uniprot_sprot_plants.fasta --db data/uniprot_sprot_plants.fasta.dmnd
+bash scripts/run_create_mikado_tbl_updated.sh
 
 
 
