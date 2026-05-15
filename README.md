@@ -544,5 +544,27 @@ mkdir sprot_plants_mikado_db
 diamond makedb --in data/uniprot_sprot_plants.fasta --db data/uniprot_sprot_plants.fasta.dmnd
 bash scripts/run_create_mikado_tbl_updated.sh
 
+# tbl is not ok, creating it amnually
 
+cat << EOF > GDB_136/refine_prediction/GDB_136.mikado.tbl
+GDB_136/augustus.hints.all_combined.supported.gff3      augsupp True    8       True    True    False   False
+GDB_136/GDB_136.run2.EVM.no_ELM.gff3    evm     True    8       True    True    False   False
+mikado/GDB_136.mikado_refined_prediction.RUN1.loci.gff3 mik     True    5       False   True    False   False
+miniprot/GDB_136.uniref_plants_c50.miniprot_scored.gff  prot    True    5       False   True    False   False
+GDB_136/GDB_136.helixer.combined.gff3   helixer True    8       True    True    False   False
+EOF
 
+mikado configure \
+  --list GDB_136/refine_prediction/GDB_136.mikado.tbl \
+  --reference data/GDB_136.fa \
+  --mode permissive \
+  --scoring plant.yaml \
+  --copy-scoring plant.yaml \
+  -bt sprot_plants_mikado_db/uniprot_sprot_plants.fasta \
+  --junctions GDB_136/portcullis/portcullis.flt.pass.junctions.bed \
+  -od sprot_plants_mikado_db/ \
+  sprot_plants_mikado_db/GDB_136.mikado.config.yaml
+
+  mikado prepare -p 8 --out sprot_plants_mikado_db/mikado_prepared.gtf --out_fasta sprot_plants_mikado_db/mikado_prepared.fasta --json-conf sprot_plants_mikado_db/GDB_136.mikado.config.yaml
+
+  
