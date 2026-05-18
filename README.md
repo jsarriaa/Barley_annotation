@@ -565,6 +565,8 @@ mikado configure \
   -od sprot_plants_mikado_db/ \
   sprot_plants_mikado_db/GDB_136.mikado.config.yaml
 
-  mikado prepare -p 8 --out sprot_plants_mikado_db/mikado_prepared.gtf --out_fasta sprot_plants_mikado_db/mikado_prepared.fasta --json-conf sprot_plants_mikado_db/GDB_136.mikado.config.yaml
+nohup mikado prepare -p 8 --out sprot_plants_mikado_db/mikado_prepared.gtf --out_fasta sprot_plants_mikado_db/mikado_prepared.fasta --json-conf sprot_plants_mikado_db/GDB_136.mikado.config.yaml > logs/GDB_136.mikado.prepare_sprot.log 2>&1
 
-  
+nohup diamond blastx --threads 32 --query sprot_plants_mikado_db/mikado_prepared.fasta --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore ppos btop --max-target-seqs 10 --matrix blosum62 --evalue 1.0e-03 --db /scratch/GDB136/new_anno/data/uniprot_sprot_plants.fasta.dmnd --salltitles --sensitive --compress 1 --out sprot_plants_mikado_db/blast_sensitive.mikado_transcripts.tsv.gz > logs/GDB_136.diamond_sprot.log 2>&1
+
+nohup mikado serialise -p 8 --json-conf sprot_plants_mikado_db/GDB_136.mikado.config.yaml --tsv sprot_plants_mikado_db/blast_sensitive.mikado_transcripts.tsv.gz --orfs sprot_plants_mikado_db/mikado_transcripts.orfs.gff --transcripts sprot_plants_mikado_db/mikado_prepared.fasta --blast_targets sprot_plants_mikado_db/uniprot_sprot_plants.fasta --junctions GDB_136/portcullis/portcullis.flt.pass.junctions.bed sprot_plants_mikado_db/mikado.db > logs/GDB_136.mikado.serialise_sprot.log 2>&1 &
