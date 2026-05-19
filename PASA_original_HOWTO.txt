@@ -1,0 +1,344 @@
+# Paralel Isoforms and gene annotation of Mikado
+# Have in mind both mRNA seq and IsoSeq data
+
+# mRNA preparation
+# ================================
+# We are using a Genome-guided assembly
+# Using maped reads with STAR
+# Assembled with StringTie
+
+# Already done, so grab:
+/scratch/GDB136/annotation$ ls -lh stringtie/stringtie.merged.junc_flt.gtf 
+-rw-r--r-- 1 jsarria compbio 34M sep 24 10:20 stringtie/stringtie.merged.junc_flt.gtf
+
+head stringtie/stringtie.merged.junc_flt.gtf
+# stringtie --merge -o /scratch/GDB136/annotation/stringtie/GDB_136_stringtie.merged.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0008.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0007.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0009.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0003.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0015.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0001.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0013.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0014.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0006.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0004.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0010.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0005.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0002.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0011.stringtie.gtf /scratch/GDB136/annotation/stringtie/CP851-001U0012.stringtie.gtf
+# StringTie version 3.0.1
+chr1H   StringTie       transcript      271740  272641  1000    .       .       gene_id "MSTRG.1"; transcript_id "MSTRG.1.1";
+chr1H   StringTie       exon    271740  272641  1000    .       .       gene_id "MSTRG.1"; transcript_id "MSTRG.1.1"; exon_number "1";
+chr1H   StringTie       transcript      275079  276315  1000    -       .       gene_id "MSTRG.2"; transcript_id "MSTRG.2.1";
+chr1H   StringTie       exon    275079  275674  1000    -       .       gene_id "MSTRG.2"; transcript_id "MSTRG.2.1"; exon_number "1";
+chr1H   StringTie       exon    275843  276043  1000    -       .       gene_id "MSTRG.2"; transcript_id "MSTRG.2.1"; exon_number "2";
+chr1H   StringTie       exon    276198  276315  1000    -       .       gene_id "MSTRG.2"; transcript_id "MSTRG.2.1"; exon_number "3";
+chr1H   StringTie       transcript      555866  556369  1000    .       .       gene_id "MSTRG.3"; transcript_id "MSTRG.3.1";
+chr1H   StringTie       exon    555866  556369  1000    .       .       gene_id "MSTRG.3"; transcript_id "MSTRG.3.1"; exon_number "1";
+
+# Transform into fasta:
+gffread stringtie/stringtie.merged.junc_flt.gtf \
+  -g /scratch/GDB136/annotation/genome/GDB_136.fa \
+  -w /scratch/GDB136/annotation/stringtie/mRNA_transcripts.fasta
+
+# IsoSeq preparation:
+# ==============================
+
+# Taking the minimap2 mapped reads file:
+/scratch/GDB136/annotation/Isoseq/GDB_136_Isoseq.mm2.bam
+# Which is already sorted
+samtools view -H Isoseq/GDB_136_Isoseq.mm2.bam | grep "@HD"
+@HD     VN:1.6  SO:coordinate
+
+# Then, collapse the file, needed for PASA
+conda install -c bioconda isoseq3
+isoseq3 --version
+isoseq 4.3.0 (commit v4.3.0)
+
+isoseq3 collapse Isoseq/GDB_136_Isoseq.mm2.bam Isoseq/GDB_136_Isoseq_collapsed.mm2.gff
+-rw-r--r-- 1 jsarria compbio 22M dic 11 09:25 Isoseq/GDB_136_Isoseq_collapsed.fasta
+
+# merge both files:
+cat stringtie/mRNA_transcripts.fasta Isoseq/GDB_136_Isoseq_collapsed.fasta > PASA/mRNA_IsoSeq_merged_transcripts.fasta
+
+#########################
+# Prepare and run PASA
+#########################
+
+# Create environment with PASA, MariaDB, and IsoSeq3
+conda create -n pasa_env -c bioconda -c conda-forge \
+    pasa mysql-server mysql-client isoseq3 samtools perl-dbd-mysql
+
+conda activate pasa_env
+
+# Allows to call by
+mysqld_safe
+
+mysql
+
+# Initialize database. Insecure is to do without pass 
+mysqld --initialize-insecure --datadir=$(pwd)/data
+
+# Server in bg
+mysqld_safe --datadir=$(pwd)/data \
+            --socket=$(pwd)/data/mysql.sock \
+            --port=3307 \
+            --pid-file=$(pwd)/data/mysqld.pid &
+
+2025-12-11T07:18:55.121833Z mysqld_safe Logging to '/scratch/GDB136/annotation/PASA/data/esplandian.err'.
+2025-12-11T07:18:55.160035Z mysqld_safe Starting mysqld daemon with databases from /scratch/GDB136/annotation/PASA/data
+
+(pasa_env) jsarria@esplandian:/scratch/GDB136/annotation/PASA$ mysql -u root --socket=$(pwd)/data/mysql.sock
+
+mysql> 
+
+# Create user
+mysql> CREATE USER 'root'@'%' IDENTIFIED BY 'Password123';
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+FLUSH PRIVILEGES;
+EXIT;
+
+# Generate and edit config file
+# NOTE: use the template as building it from scratch is a headache
+
+cp $PASA_HOME/pasa_conf/pasa.alignAssembly.Template.txt alignAssembly.config
+
+# Eventually you got:
+cat alignAssembly.config 
+ 
+DATABASE=GDB136_pasa_db
+MYSQLDB=GDB136_pasa_db
+MYSQLSERVER=127.0.0.1;port=3307
+MYSQL_RW_USER=root
+MYSQL_RW_PASSWORD=Password123
+MIN_PERCENT_ALIGNED=90
+MIN_AVG_PER_ID=95
+NUM_BP_PERFECT_SPLICE_BOUNDARY=0
+CLUSTERING_DIST=100
+
+
+####
+# Carry on with
+export PASA_HOME=/scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3
+
+# Now we are able to call from there
+
+$PASA_HOME/scripts/test_mysql_connection.dbi -c alignAssembly.config
+usage: /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/scripts/test_mysql_connection.dbi user password host database
+
+# Check gmap and blat versions
+gmap --version
+GMAP version 2025-07-31 called with args: gmap.sse42 --version
+
+blat - Standalone BLAT v. 39x1 fast sequence search command line tool
+
+# It is providing a lot of problems not finding the database... (classical perl) 
+sed -i 's/\r$//' alignAssembly.config    
+# clean weird characters
+
+# Using a template to provide to PASA a config necessary file (doing this to actually not delete the template, just in case)
+cd $PASA_HOME/pasa_conf
+cp pasa.CONFIG.template conf.txt
+cd /scratch/GDB136/annotation/PASA
+
+# Use proper server path
+MY_SOCKET=/scratch/GDB136/annotation/PASA/data/mysql.sock
+sed -i "s|^MYSQLSERVER=.*|MYSQLSERVER=localhost;mysql_socket=$MY_SOCKET|" alignAssembly.config
+
+# provide root to localhost (socket connexion)
+mysql -S /scratch/GDB136/annotation/PASA/data/mysql.sock -u root -p
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Password123';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
+
+CREATE USER IF NOT EXISTS 'root'@'127.0.0.1' IDENTIFIED BY 'Password123';
+ALTER USER 'root'@'127.0.0.1' IDENTIFIED BY 'Password123';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' WITH GRANT OPTION;
+
+ALTER USER 'root'@'%' IDENTIFIED BY 'Password123';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;
+EXIT;
+
+# Update at DB connect perl script, the direction to avoid errors that perl is providing due to conda
+nano /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/PerlLib/DB_connect.pm
+
+#    my $dbh = DBI->connect("dbi::database=$db;host=$server", $username, $password);
+# Joan: deactivated line to pass directly our DBI
+    my $dbh = DBI->connect("dbi:mysql:database=GDB136_pasa_db;host=127.0.0.1;port=3307", "root", "Password123");
+
+
+# Now this should work:
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 -e "status"
+
+# Manually create the database
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 -e "CREATE DATABASE GDB136_pasa_db CHARACTER SET latin1 COLLATE latin1_swedish_ci;"
+# Latin to avoid incompatibilities of bits
+
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 GDB136_pasa_db < /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/schema/cdna_alignment_mysqlschema
+
+# ====================================
+# Execute the pipeline
+# ====================================
+
+PWD=$(pwd)
+
+$PASA_HOME/Launch_PASA_pipeline.pl \
+  -c $PWD/alignAssembly.config \
+  -R \
+  -g /scratch/GDB136/annotation/genome/GDB_136.fa \
+  -t $PWD/mRNA_IsoSeq_merged_transcripts.fasta \
+  --ALIGNERS blat,gmap \
+  --CPU 32
+
+# If at any point you close the terminal or something happened, PASA can return to a checkpoint and continue not from the beggining
+mysqld_safe \
+  --datadir=/scratch/GDB136/annotation/PASA/data \
+  --socket=/scratch/GDB136/annotation/PASA/data/mysql.sock \
+  --port=3307 \
+  --pid-file=/scratch/GDB136/annotation/PASA/data/mysql.pid \
+  --log-error=/scratch/GDB136/annotation/PASA/data/mysql.err &
+
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 -e "status"
+
+### !!!! REMEMBER TO EXPORT ALL $PATHS BEFORE !!!!!!!
+
+# Error:
+Errors: Data too long for column 'align_acc' at row 1
+
+# Solution: make wider the column that is complaining:
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 GDB136_pasa_db
+
+mysql> ALTER TABLE align_link MODIFY align_acc VARCHAR(1000);
+Query OK, 129834 rows affected (2,98 sec)
+Records: 129834  Duplicates: 0  Warnings: 0
+# Probably I have just breaked and crashed the code on other 100 places, but who cares
+
+mysql> ALTER TABLE cdna_info MODIFY cdna_acc VARCHAR(1000);
+Query OK, 79937 rows affected (1,05 sec)
+Records: 79937  Duplicates: 0  Warnings: 0
+
+EXIT;
+
+# Throw again PASA
+
+# Names still giving problems:
+ DBD::mysql::db do failed: Duplicate entry 'asmbl_3-ccs' for key 'asmbl_link.PRIMARY' at /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/PerlLib/DB_connect.pm line 224. 
+
+PASA is misinterpreting the | and / characters in your PacBio FASTA headers as delimiters, causing it to truncate all unique sequence IDs to the identical string "ccs" 
+and triggering a MySQL duplicate entry error.
+
+(pasa_env) jsarria@esplandian:/scratch/GDB136/annotation/PASA$ grep "ccs" mRNA_IsoSeq_merged_transcripts.fasta | head -n 10
+>PB.1.1|PB.1.1:555899-556087(+)|m84075_250724_161649_s4/251595661/ccs/18826_19560
+>PB.2.1|PB.2.1:989434-990036(+)|m84075_250724_161649_s4/216466132/ccs/8875_9966 
+
+sed -i '/^>/ s/[|\/]/_/g' mRNA_IsoSeq_merged_transcripts.fasta
+
+grep "ccs" mRNA_IsoSeq_merged_transcripts.fasta | head -n 5
+>PB.1.1_PB.1.1:555899-556087(+)_m84075_250724_161649_s4_251595661_ccs_18826_19560
+>PB.2.1_PB.2.1:989434-990036(+)_m84075_250724_161649_s4_216466132_ccs_8875_9966
+>PB.3.1_PB.3.1:1278078-1278365(+)_m84075_250724_161649_s4_262409981_ccs_15_1064
+>PB.4.1_PB.4.1:555900-556094(-)_m84075_250724_161649_s4_63373600_ccs_4193_5386
+>PB.4.2_PB.4.2:556001-556080(-)_m84075_250724_161649_s4_123603757_ccs_29_704
+
+# remove failed processes and reset database
+
+rm -rf *.gff3 *.gtf *.bed *.out *.cidx alignment.validations.output
+rm -rf pblat_outdir pasa_run.log.dir __pasa_* rm -rf tmp-* 11.ooc
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 -e "DROP DATABASE IF EXISTS GDB136_pasa_db;"
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 -e "CREATE DATABASE GDB136_pasa_db CHARACTER SET latin1 COLLATE latin1_swedish_ci;"
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 GDB136_pasa_db < /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/schema/cdna_alignment_mysqlschema
+
+# Re-run 
+PWD=$(pwd)
+
+$PASA_HOME/Launch_PASA_pipeline.pl \
+  -c $PWD/alignAssembly.config \
+  -R \
+  -g /scratch/GDB136/annotation/genome/GDB_136.fa \
+  -t $PWD/mRNA_IsoSeq_merged_transcripts.fasta \
+  --ALIGNERS blat,gmap \
+  --CPU 32
+
+# Failed again, now bcause:
+# Errors: Data too long for column 'align_acc' at row 1
+# So increasing the column character limit to 1000 (once again, maybe make crash anything else)
+
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 GDB136_pasa_db
+ALTER TABLE align_link MODIFY align_acc VARCHAR(1500);
+ALTER TABLE cdna_info MODIFY cdna_acc VARCHAR(1500);
+ALTER TABLE asmbl_link MODIFY asmbl_acc VARCHAR(1500);
+EXIT;
+
+# Rerun again pasa
+
+# Nope, still having big issues perl to handle all those big names. So, we will have to rename to smaller things isoseq, and start again from 0 the alignments :')
+
+grep "^>" mRNA_IsoSeq_merged_transcripts.fasta | awk '{print $1, "\ttranscript_"NR}' > id_mapping.txt
+awk '/^>/{print ">transcript_" ++i; next}{print}' mRNA_IsoSeq_merged_transcripts.fasta > mRNA_IsoSeq_merged_transcripts_simple.fasta
+
+# Remove EVERYTHING else
+rm -rf gmap.* blat.* GDB136_pasa_db.* pasa_run.log.dir __pasa_* assembly_db_loader.* alignment.validations.output
+rm -rf pblat_outdir
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 -e "DROP DATABASE IF EXISTS GDB136_pasa_db;"
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 -e "CREATE DATABASE GDB136_pasa_db CHARACTER SET latin1 COLLATE latin1_swedish_ci;"
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 GDB136_pasa_db < /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/schema/cdna_alignment_mysqlschema
+
+# Once again
+$PASA_HOME/Launch_PASA_pipeline.pl \
+  -c $PWD/alignAssembly.config \
+  -R \
+  -g /scratch/GDB136/annotation/genome/GDB_136.fa \
+  -t $PWD/mRNA_IsoSeq_merged_transcripts_simple.fasta \
+  --ALIGNERS blat,gmap \
+  --CPU 32
+
+####
+#### FINISHED
+####
+
+# Running busco on those genomic sequences
+busco -i GDB136_pasa_db.assemblies.fasta -o busco_GDB136_PASA -l poales_odb12 -m genome -c 32 -f
+
+####
+####
+####
+
+# Thomas explained that a rerun and iterate over the results is a good idea, so going for it (using mikado out)
+
+# Generate a second file to use in this case. It will use the mikados gff3 to compare
+cp alignAssembly.config annotationCompare.config 
+
+$PASA_HOME/scripts/Load_Current_Gene_Annotations.dbi \
+  -c $PWD/annotationCompare.config \
+  -g /scratch/GDB136/annotation/genome/GDB_136.fa \
+  -P /scratch/GDB136/annotation/sprot_plants_mikado_db/GDB_136.mikado_refined_prediction.run3.loci.gff3
+# All mikado genes are included at the database now
+
+$PASA_HOME/Launch_PASA_pipeline.pl \
+  -c $PWD/alignAssembly.config \
+  -A \
+  -g /scratch/GDB136/annotation/genome/GDB_136.fa \
+  -t $PWD/mRNA_IsoSeq_merged_transcripts_simple.fasta \
+  --CPU 32
+# LOG: pasa_run.log.dir/GDB136_pasa_db.annotation_compare.777220.out
+
+# Output:
+GDB136_pasa_db.gene_structures_post_PASA_updates.777220.gff3
+
+(pasa_env) jsarria@esplandian:/scratch/GDB136/annotation/PASA$ awk '$3 == "gene"' GDB136_pasa_db.gene_structures_post_PASA_updates.777220.gff3 | wc -l
+74136
+(pasa_env) jsarria@esplandian:/scratch/GDB136/annotation/PASA$ awk '$3 == "CDS"' GDB136_pasa_db.gene_structures_post_PASA_updates.777220.gff3 | wc -l
+301533
+
+# Run cocla
+# Continue in cocla HOWTO
+
+gffread GDB136_pasa_db.gene_structures_post_PASA_updates.777220.gff3 \
+  -g ../genome/GDB_136.fa \
+  -y GDB136_PASA_proteins_raw.fasta
+
+busco -i GDB136_PASA_proteins_raw.fasta \
+  -o busco_GDB136_PASA_proteins \
+  -l poales_odb12 \
+  -m proteins \
+  -c 32 \
+  -f
+
+# Compare buscos from the cocla 80 filtred and full pasa anno
+grep -v "^#" busco_GDB136_PASA_proteins/run_poales_odb12/full_table.tsv | awk '$2=="Complete" || $2=="Duplicated" {print $1}' | sort> full_complete_PASA_GDB136.ids
+
+grep -v "^#" cocla2/GDB_136/cocla/hc_80/run_poales_odb12/full_table.tsv | awk '$2=="Complete" || $2=="Duplicated" {print $1}' | sort > cocla80_GDB136.ids
+
+comm -23 full_complete_PASA_GDB136.ids cocla80_GDB136.ids > lost_buscos_cocla80_from_PASA.txt
+
+wc -l lost_buscos_cocla80_from_PASA.txt
+208 lost_buscos_cocla80_from_PASA.txt
