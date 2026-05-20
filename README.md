@@ -569,4 +569,179 @@ nohup mikado prepare -p 8 --out sprot_plants_mikado_db/mikado_prepared.gtf --out
 
 nohup diamond blastx --threads 32 --query sprot_plants_mikado_db/mikado_prepared.fasta --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore ppos btop --max-target-seqs 10 --matrix blosum62 --evalue 1.0e-03 --db /scratch/GDB136/new_anno/data/uniprot_sprot_plants.fasta.dmnd --salltitles --sensitive --compress 1 --out sprot_plants_mikado_db/blast_sensitive.mikado_transcripts.tsv.gz > logs/GDB_136.diamond_sprot.log 2>&1
 
-nohup mikado serialise -p 8 --json-conf sprot_plants_mikado_db/GDB_136.mikado.config.yaml --tsv sprot_plants_mikado_db/blast_sensitive.mikado_transcripts.tsv.gz --orfs sprot_plants_mikado_db/mikado_transcripts.orfs.gff --transcripts sprot_plants_mikado_db/mikado_prepared.fasta --blast_targets sprot_plants_mikado_db/uniprot_sprot_plants.fasta --junctions GDB_136/portcullis/portcullis.flt.pass.junctions.bed sprot_plants_mikado_db/mikado.db > logs/GDB_136.mikado.serialise_sprot.log 2>&1 &
+nohup mikado serialise -p 8 \
+  --json-conf sprot_plants_mikado_db/GDB_136.mikado.config.yaml \
+  --tsv sprot_plants_mikado_db/blast_sensitive.mikado_transcripts.tsv.gz \
+  --transcripts sprot_plants_mikado_db/mikado_prepared.fasta \
+  --blast_targets data/uniprot_sprot_plants.fasta \
+  --junctions GDB_136/portcullis/portcullis.flt.pass.junctions.bed \
+  sprot_plants_mikado_db/mikado.db > logs/GDB_136.mikado.serialise_sprot.log 2>&1 &
+
+nohup mikado pick -p 32   --json-conf sprot_plants_mikado_db/GDB_136.mikado.config.yaml   -db sprot_plants_mikado_db/mikado.db   --monoloci-out GDB_136.mikado_refined_prediction.run3.monoloci.gff3   --loci-out GDB_136.mikado_refined_prediction.run3.loci.gff3   -od sprot_plants_mikado_db/ > logs/GDB_136.mikado.sprot_pick.log 2>&1 &
+
+grep $'\tgene' sprot_plants_mikado_db/GDB_136.mikado_refined_prediction.run3.loci.gff3 -c
+74993
+# Without the unplaced contigs this number was 74122
+
+gffread -g data/GDB_136.fa sprot_plants_mikado_db/GDB_136.mikado_refined_prediction.run3.loci.gff3 -x sprot_plants_mikado_db/GDB_136.mikado_refined_prediction.run3.loci.cds.fa
+bash scripts/run_write_proteins_sprot_plants.sh
+busco -i sprot_plants_mikado_db/GDB_136.mikado_refined_prediction.run3.loci.aa.fa -o busco_GDB136_anno_mikado_sprot -l poales_odb12 -m proteins -c 32
+C:97.9%[S:66.9%,D:31.0%],F:1.0%,M:1.1%,n:6282
+
+
+######
+FINISHED MIKADO PIPELINE; Now refining the result with PASA
+######
+
+gffread stringtie/stringtie.merged.junc_flt.gtf -g data/GDB_136.fa -w stringtie/mRNA_transcripts.fasta
+
+conda install -c bioconda isoseq3
+isoseq3 --version
+isoseq 4.3.0 (commit v4.3.0)
+
+isoseq3 collapse data/Isoseq_GDB_136_Isoseq.mm2.bam data/GDB_136_Isoseq_collapsed.mm2.gff 
+
+mkdir PASA
+cat stringtie/mRNA_transcripts.fasta data/GDB_136_Isoseq_collapsed.mm2.fasta > PASA/mRNA_IsoSeq_merged_transcripts.fasta
+
+conda create -n pasa_env -c bioconda -c conda-forge \
+    pasa mysql-server mysql-client isoseq3 samtools perl-dbd-mysql
+
+conda activate pasa_env
+
+mysqld --initialize-insecure --datadir=$(pwd)/PASA_data
+
+#Running it at bg
+mysqld_safe --datadir=$(pwd)/PASA_data \
+            --socket=$(pwd)/PASA_data/mysql.sock \
+            --port=3307 \
+            --pid-file=$(pwd)/PASA_data/mysqld.pid &
+
+mysql -u root --socket=$(pwd)/PASA_data/mysql.sock
+# Create user
+mysql> CREATE USER 'root'@'%' IDENTIFIED BY 'Password123';
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+FLUSH PRIVILEGES;
+EXIT;
+
+nano PASA/alignAssembly.config 
+
+cat nano PASA/alignAssembly.config 
+DATABASE=GDB136_pasa_db
+MYSQLDB=GDB136_pasa_db
+MYSQLSERVER=127.0.0.1;port=3307
+MYSQL_RW_USER=root
+MYSQL_RW_PASSWORD=Password123
+MIN_PERCENT_ALIGNED=90
+MIN_AVG_PER_ID=95
+NUM_BP_PERFECT_SPLICE_BOUNDARY=0
+CLUSTERING_DIST=100
+USE_GMAP_LARGE=0
+
+# Fix bugged characters
+sed -i 's/\r$//' PASA/alignAssembly.config
+
+#Set you PASA_HOME, in my case:
+export PASA_HOME=/scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3
+
+$PASA_HOME/scripts/test_mysql_connection.dbi -c PASA/alignAssembly.config
+usage: /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/scripts/test_mysql_connection.dbi user password host database
+
+gmap --version
+GMAP version 2025-07-31 called with args: gmap.sse42 --version
+
+blat 
+blat - Standalone BLAT v. 39x1 fast sequence search command line tool
+
+# Using a template to provide to PASA a config necessary file (doing this to actually not delete the template, just in case)
+cd $PASA_HOME/pasa_conf
+cp pasa.CONFIG.template conf.txt
+cd [Working_directory]
+
+# Use proper server path
+MY_SOCKET=/scratch/GDB136/new_anno/PASA_data/mysql.sock
+sed -i "s|^MYSQLSERVER=.*|MYSQLSERVER=localhost;mysql_socket=$MY_SOCKET|" PASA/alignAssembly.config
+
+# provide root to localhost (socket connexion)
+mysql -S /scratch/GDB136/new_anno/PASA_data/mysql.sock -u root -p
+Enter password: 
+# Password is empty
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Password123';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
+
+CREATE USER IF NOT EXISTS 'root'@'127.0.0.1' IDENTIFIED BY 'Password123';
+ALTER USER 'root'@'127.0.0.1' IDENTIFIED BY 'Password123';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' WITH GRANT OPTION;
+
+ALTER USER 'root'@'%' IDENTIFIED BY 'Password123';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;
+EXIT;
+
+
+# Update at DB connect perl script, the direction to avoid errors that perl is providing due to conda
+nano /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/PerlLib/DB_connect.pm
+
+#    my $dbh = DBI->connect("dbi::database=$db;host=$server", $username, $password);
+# Joan: deactivated line to pass directly our DBI
+
+# Now this should work:
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 -e "status"
+
+# Manually create the database
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 -e "CREATE DATABASE GDB136_pasa_db CHARACTER SET latin1 COLLATE latin1_swedish_ci;"
+# Latin to avoid incompatibilities of bits
+
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 GDB136_pasa_db < /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/schema/cdna_alignment_mysqlschema
+
+#Perl cant handle those big pacbio names, so we have to write a simplified database
+awk '/^>/{print ">transcript_" ++i; next}{print}' PASA/mRNA_IsoSeq_merged_transcripts.fasta > PASA/mRNA_IsoSeq_merged_transcripts_simple.fasta
+
+# apply the column size patches
+mysql -h 127.0.0.1 -P 3307 -u root -pPassword123 GDB136_pasa_db <<EOF
+ALTER TABLE align_link MODIFY align_acc VARCHAR(1500);
+ALTER TABLE cdna_info MODIFY cdna_acc VARCHAR(1500);
+ALTER TABLE asmbl_link MODIFY asmbl_acc VARCHAR(1500);
+EOF
+
+# ====================================
+# Execute the pipeline
+# ====================================
+
+nohup $PASA_HOME/Launch_PASA_pipeline.pl \
+  -c $PWD/PASA/alignAssembly.config \
+  -R \
+  -g /scratch/GDB136/new_anno/data/GDB_136.fa \
+  -t $PWD/PASA/mRNA_IsoSeq_merged_transcripts_simple.fasta \
+  --ALIGNERS blat,gmap \
+  --CPU 32 > logs/GDB136.pasa_alignment.log 2>&1 &
+
+#If gmapl brings problems; 
+rm -rf __pasa_GDB136_pasa_db_mysql_chkpts/
+rm -f gmap.spliced_alignments.gff3* __pasa_gmap*
+rm -rf pblat_outdir
+
+# Go to your active Conda environment's binary directory
+cd /scratch/software-phgv2/miniconda3/envs/pasa_env/bin/
+mv gmapl gmapl.bak
+ln -s gmap gmapl
+# Jump back to your work directory
+cd /scratch/GDB136/new_anno/
+
+#If it stills complaining about safety permisions, go to the pasa perl script:
+nano /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/PerlLib/DB_connect.pm
+# And set once again the line that connects with the database like this:
+my $dbh = DBI->connect("dbi:mysql:database=GDB136_pasa_db;mysql_socket=/scratch/GDB136/new_anno/PASA_data/mysql.sock", "root", "Password123");
+
+#Rerun:
+nohup $PASA_HOME/Launch_PASA_pipeline.pl \
+  -c $PWD/PASA/alignAssembly.config \
+  -R \
+  -g /scratch/GDB136/new_anno/data/GDB_136.fa \
+  -t $PWD/PASA/mRNA_IsoSeq_merged_transcripts_simple.fasta \
+  --ALIGNERS blat,gmap \
+  --CPU 32 > logs/GDB136.pasa_alignment.log 2>&1 &
+
+
