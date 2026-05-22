@@ -744,4 +744,30 @@ nohup $PASA_HOME/Launch_PASA_pipeline.pl \
   --ALIGNERS blat,gmap \
   --CPU 32 > logs/GDB136.pasa_alignment.log 2>&1 &
 
+###
+# Finished
+###
 
+# Thomas explained that a rerun and iterate over the results is a good idea, so going for it (using mikado out)
+
+$PASA_HOME/scripts/Load_Current_Gene_Annotations.dbi \
+  -c $PWD/PASA/alignAssembly.config \
+  -g /scratch/GDB136/new_anno/data/GDB_136.fa \
+  -P /scratch/GDB136/new_anno/sprot_plants_mikado_db/GDB_136.mikado_refined_prediction.run3.loci.gff3
+# All mikado genes are included at the database now
+
+nohup $PASA_HOME/Launch_PASA_pipeline.pl \
+  -c $PWD/PASA/alignAssembly.config \
+  -A \
+  -g /scratch/GDB136/new_anno/data/GDB_136.fa \
+  -t $PWD/PASA/mRNA_IsoSeq_merged_transcripts_simple.fasta \
+  --CPU 32 > logs/GDB136.pasa_compare.log 2>&1 &
+# -A is the tag for comparison
+
+# If it dies, ensure proper space in disk, and relaunch
+nohup $PASA_HOME/Launch_PASA_pipeline.pl \
+  -c $PWD/PASA/alignAssembly.config \
+  -A \
+  -g /scratch/GDB136/new_anno/data/GDB_136.fa \
+  -t $PWD/PASA/mRNA_IsoSeq_merged_transcripts_simple.fasta \
+  --CPU 32 > logs/GDB136.pasa_compare_retry.log 2>&1 &
