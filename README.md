@@ -771,3 +771,61 @@ nohup $PASA_HOME/Launch_PASA_pipeline.pl \
   -g /scratch/GDB136/new_anno/data/GDB_136.fa \
   -t $PWD/PASA/mRNA_IsoSeq_merged_transcripts_simple.fasta \
   --CPU 32 > logs/GDB136.pasa_compare_retry.log 2>&1 &
+
+awk '$3 == "gene"' GDB136_pasa_db.gene_structures_post_PASA_updates.final.gff3 | wc -l
+74929
+
+####
+# FINISHED PASA
+#### 
+
+# COCLA2 pipeline, set gene names and confidence level
+
+wget https://github.com/PGSB-HMGU/cocla2/archive/refs/heads/master.zip
+unzip cocla2-master.zip
+
+# Dowload the blastdb Thomas database
+wget https://hmgubox2.helmholtz-muenchen.de/public.php/dav/files/i6oxF8YFLi4enzZ/?accept=zip
+unzip 'index.html?accept=zip'
+rm 'index.html?accept=zip'
+
+ls -lh cocla2-master/cocla_dbs/
+total 877M
+-rw-r--r-- 1 jsarria compbio  17M may 25 08:38 rexdb_trep.dmnd
+-rw-r--r-- 1 jsarria compbio  16M may 25 08:38 rexdb_trep.fasta
+-rw-r--r-- 1 jsarria compbio  17M may 25 08:38 uniprot_Magnoliophyta_reviewed_collapsed_170220.fasta
+-rw-r--r-- 1 jsarria compbio  17M may 25 08:38 uniprot_Magnoliophyta_reviewed_collapsed_170220.fasta.dmnd
+-rw-r--r-- 1 jsarria compbio 403M may 25 08:38 uniprot_Poaceae_complete_collapsed_170220.fasta
+-rw-r--r-- 1 jsarria compbio 410M may 25 08:38 uniprot_Poaceae_complete_collapsed_170220.fasta.dmnd
+
+# Now install interproscan and port-scriber
+
+# ======= PORT-SCRIBER ===========
+# we will install the binary and implement it to pananno environment
+https://github.com/usadellab/prot-scriber/releases/download/v0.1.6/x86_64-unknown-linux-gnu_prot-scriber
+echo $CONDA_PREFIX
+mv prot-scriber $CONDA_PREFIX/bin/
+# And now this should work:
+prot-scriber --help
+prot-scriber version 0.1.6
+
+# ====== INTERPROSCAN ===========
+perl -version
+This is perl 5, version 26, subversion 2 (v5.26.2) built for x86_64-linux-thread-multi
+python3 --version
+Python 3.9.15
+java -version
+openjdk version "17.0.3-internal" 2022-04-19
+
+mkdir my_interproscan
+cd my_interproscan/
+
+# for more info, you are following the next doc:
+# https://interproscan-docs.readthedocs.io/en/v5/HowToDownload.html
+
+wget https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.76-107.0/interproscan-5.76-107.0-64-bit.tar.gz
+wget https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.76-107.0/interproscan-5.76-107.0-64-bit.tar.gz.md5
+
+md5sum -c interproscan-5.76-107.0-64-bit.tar.gz.md5
+# If its ok, download is succesfull
+
