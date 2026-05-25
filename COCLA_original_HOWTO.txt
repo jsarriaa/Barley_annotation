@@ -1,0 +1,51 @@
+tail -n 50 pasa_run.log.dir/GDB136_pasa_db.annotation_compare.2914657.out
+ANTISENSE: asmbl_33943 to mikado.GDB136_chr5HG8435
+Processing asmbl_33942 (FL:) for potential antisense.
+Processing asmbl_33952 (FL:) for potential antisense.
+Processing asmbl_33953 (FL:) for potential antisense.
+Processing asmbl_33979 (FL:) for potential antisense.
+Processing asmbl_33986 (FL:) for potential antisense.
+
+
+Scaffold: GDB136_chr5H
+Trans acc: asmbl_33986
+Alignment: orientation: -
+coords: 583637326-583640874
+segment* orient: - coords: 583637326-583639026 type:  first lsplice: 0 rsplice: 1
+segment* orient: - coords: 583640689-583640874 type:  last lsplice: 1 rsplice: 0
+Method: get_potential_overlapping_annotations() 583637326-583640874, strand: +, type: nonfli
+asmbl_type: nonfli.
+Overlap Detected. model(583636996, 583643124); lend,rend: (583637326, 583640874)
+Method: get_latest_gene_models (mikado.GDB136_chr5HG8504, )
+Retrieving/restoring already updated mikado.GDB136_chr5HG8504.2 gene_obj from mysql db.
+Retrieving mikado.GDB136_chr5HG8504.1 gene_obj from annot_db.
+Relevant overlap detected.
+Orientation same.
+ANTISENSE: asmbl_33986 to mikado.GDB136_chr5HG8504
+Processing asmbl_33988 (FL:) for potential antisense.
+Processing asmbl_34030 (FL:) for potential antisense.
+Processing asmbl_34032 (FL:) for potential antisense.
+Processing asmbl_34034 (FL:) for potential antisense.
+Processing asmbl_34036 (FL:) for potential antisense.
+Processing asmbl_34039 (FL:) for potential antisense.
+Processing asmbl_34076 (FL:) for potential antisense.
+Processing asmbl_34085 (FL:) for potential antisense.
+
+
+Scaffold: GDB136_chr5H
+Trans acc: asmbl_34085
+Alignment: orientation: -
+coords: 586656078-586656802
+segment* orient: - coords: 586656078-586656460 type:  first lsplice: 0 rsplice: 1
+segment* orient: - coords: 586656574-586656802 type:  last lsplice: 1 rsplice: 0
+Method: get_potential_overlapping_annotations() 586656078-586656802, strand: +, type: nonfli
+asmbl_type: nonfli.
+Processing asmbl_34092 (FL:) for potential antisense.
+Processing asmbl_34102 (FL:) for potential antisense.
+Processing asmbl_34122 (FL:) for potential antisense.
+
+
+###################################################################
+Method: analyze_potential_gene_splitting(contig: GDB136_chr5H)
+
+Method: convert_novel_alt_splice_of_antisense()
