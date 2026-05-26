@@ -775,6 +775,16 @@ nohup $PASA_HOME/Launch_PASA_pipeline.pl \
 awk '$3 == "gene"' GDB136_pasa_db.gene_structures_post_PASA_updates.final.gff3 | wc -l
 74929
 
+#Those high dup. numbers are due to isoforms of a same gene that are considered different genes;
+gffread GDB136_pasa_db.gene_structures_post_PASA_updates.final.gff3 -g data/GDB_136.fa -y GDB136_PASA_proteins_raw.fasta
+busco -i GDB136_PASA_proteins_raw.fasta \
+  -o busco_GDB136_PASA_proteins \
+  -l poales_odb12 \
+  -m proteins \
+  -c 32 \
+  -f
+C:98.6%[S:65.2%,D:33.4%],F:0.4%,M:0.9%,n:6282
+
 ####
 # FINISHED PASA
 #### 
@@ -828,4 +838,121 @@ wget https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.76-107.0/interproscan-5
 
 md5sum -c interproscan-5.76-107.0-64-bit.tar.gz.md5
 # If its ok, download is succesfull
+tar -pxvzf interproscan-5.76-107.0-*-bit.tar.gz
+rm interproscan-5.76-107.0-64-bit.tar.gz interproscan-5.76-107.0-64-bit.tar.gz.md5
+cd interproscan-5.76-107.0/
+python3 setup.py -f interproscan.properties
+./interproscan.sh 
+25/05/2026 14:35:20:216 Welcome to InterProScan-5.76-107.0
+
+# Install other dependencies:
+wget https://genometools.org/pub/genometools-1.6.2.tar.gz
+# This is the last release not in github. Using this one because doesnt need more dependencies :)
+tar -zxvf genometools-1.6.2.tar.gz
+rm genometools-1.6.2.tar.gz
+make cairo=no errorcheck=no
+make install prefix=$CONDA_PREFIX cairo=no
+
+gt --version
+gt (GenomeTools) 1.6.2
+
+###
+COCLA:
+#    trep: trep-db_proteins_Rel-19.fasta.dmnd
+    trep:   "/scratch/GDB136/new_anno/cocla2-master/cocla_dbs/rexdb_trep.dmnd"
+#    sprot: uniprot_Magnoliophyta_reviewed_collapsed_170220.fasta.dmnd
+    sprot:  "/scratch/GDB136/new_anno/cocla2-master/cocla_dbs/uniprot_Magnoliophyta_reviewed_collapsed_170220.fasta.dmnd"
+#    poales: uniprot_Poaceae_complete_collapsed_170220.fasta.dmnd
+    poales: "/scratch/GDB136/new_anno/cocla2-master/cocla_dbs/uniprot_Poaceae_complete_collapsed_170220.fasta.dmnd"
+
+ANNO:
+    GDB_136: "/scratch/GDB136/new_anno/GDB136_pasa_db.gene_structures_post_PASA_updates.final.gff3"
+
+REFPROT:
+    uniref_plants_c50: "/scratch/GDB136/new_anno/cocla2-master/cocla_dbs/uniprot_Magnoliophyta_reviewed_collapsed_170220.fasta.dmnd"
+###
+
+# Prepare the folder structure:
+ln -s /scratch/GDB136/new_anno/data/GDB_136.fa GDB_136/GDB_136.fa
+# Swap the path to the tools
+# By default: ~/tools/interproscan-5.63-95.0/interproscan.sh
+/scratch/GDB136/new_anno/cocla2-master/my_interproscan/interproscan-5.76-107.0/interproscan.sh
+# Swapped all ref paths that included ~/cocla2/ at the beggining
+# Also at rule getHRD
+
+#Test dry run before:
+snakemake -np -s cocla_v3_pasa.smk --configfile config.cocla.yaml
+
+nohup snakemake -s cocla_v3_pasa.smk --configfile config.cocla.yaml --cores 32 > ../logs/cocla_run.log 2>&1 &
+
+grep ">" cocla2-master/GDB_136/cocla/GDB_136.0.66.hc.aa.fa -c
+58771
+grep ">" cocla2-master/GDB_136/cocla/GDB_136.0.75.hc.aa.fa -c
+55315
+grep ">" cocla2-master/GDB_136/cocla/GDB_136.0.8.hc.aa.fa -c
+53416
+grep ">" cocla2-master/GDB_136/cocla/GDB_136.0.9.hc.aa.fa -c
+47701
+grep ">" cocla2-master/GDB_136/cocla/GDB_136.0.95.hc.aa.fa -c
+43544
+
+busco -i cocla2-master/GDB_136/cocla/GDB_136.0.9.hc.aa.fa -o hc_90 -l poales_odb12 -m proteins -c 32
+C:91.8%[S:62.7%,D:29.1%],F:0.3%,M:7.9%,n:6282 
+busco -i cocla2-master/GDB_136/cocla/GDB_136.0.95.hc.aa.fa -o hc_95 -l poales_odb12 -m proteins -c 32
+C:93.5%[S:62.3%,D:31.2%],F:0.3%,M:6.2%,n:6282
+hc_66
+C:96.9%[S:63.9%,D:33.0%],F:0.3%,M:2.8%,n:6282
+hc_80
+C:95.6%[S:63.1%,D:32.4%],F:0.3%,M:4.1%,n:6282
+
+####
+# Prepairing final files
+####
+
+#Download final scripts from Thomas:
+ https://hmgubox2.helmholtz-muenchen.de/index.php/s/D2ytXmNti479dyH
+
+#Create config file
+cat config.finalfiles.yaml
+GENOME: 
+  GDB_136: /scratch/GDB136/new_anno/data/GDB_136.fa
+
+ANNO: 
+  GDB_136: /scratch/GDB136/new_anno/GDB136_pasa_db.gene_structures_post_PASA_updates.final.gff3
+
+COCLA:
+  GDB_136: /scratch/GDB136/new_anno/cocla2-master/GDB_136/cocla
+
+PREFIX:
+  GDB_136: ["H.VULGARE.GDB_136", "r1"]
+
+OUTDIR: release_v1
+SOURCE: csic
+
+#Ensure to change in the wrapupAnno.smk file all proper paths of python gff and proteins scripts, the name of the Q (origin) to your convinience, and cocla value.
+
+conda install -c conda-forge spacy -y
+python -m spacy download en_core_web_sm
+#Change in tag_proteins.py the pfamTE_extended path
+
+#Dry run
+snakemake -np -s wrapupAnno.smk --configfile config_wrapup.yaml
+
+busco -i cocla2-master/release_v1/GDB_136/GDB_136.csic.r1.May2026.high_longest.aa.fa -o busco_final_primary_hc -l poales_odb12 -m proteins -c 32
+C:95.4%[S:93.6%,D:1.8%],F:0.4%,M:4.2%,n:6282
+
+#If you wanna chanche the second column for the origin of the gene annotation, run a oneliner like:
+sed -i 's/\tPGSB\t/\tCSIC\t/g' /scratch/GDB136/new_anno/cocla2-master/release_v1/GDB_136/*.gff3
+
+###
+# FINAL FILES:
+
+grep -v "#" GDB_136.csic.r1.May2026.gff3 | grep "gene" -c
+74929
+grep -v "#" GDB_136.csic.r1.May2026.high.gff3 | grep "gene" -c
+43697
+grep -v "#" GDB_136.csic.r1.May2026.low.gff3 | grep "gene" -c
+31232
+busco_final_primary_hc
+C:95.4%[S:93.6%,D:1.8%],F:0.4%,M:4.2%,n:6282
 
