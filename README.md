@@ -20,6 +20,16 @@ Maybe here a summary of the pipeline
 # NOTA
 Han de ser 15x2 mRNA en fastq y un bam del IsoSeq. Cuando lo subas a ENA sube bien los enlaces de descarga. Debería quedar algo así en la carpeta de data:
 
+Stella (BMK) protocol to clean reads:
+```
+ Raw data: fastq files from BCL files with index demultiplexing
+"_good" files: fastq files from raw data by filtering adapters and removing low-quality reads
+
+1. Adapter filtering: fastp parameters: -Q -y -g -Y 10 -l 100 -b 150 -B 150 --adapter_fasta
+2. rRNA filtering: retention ratio of 0.1 for mRNA, using SOAP alignment with parameters: soap -a 1.fq -b 2.fq -D /share/nas2/database/sRNA_database/current/ncRNA_integer.fasta.index -o out.pe -2 out.se -m 100 -x 1000 -u unmap.fa
+3. fastq_filter_by_Qxx filtering parameters: -q 0.85 -w 30 (Q30 ≥ 85%)
+```
+
 ```
 /genoma/GDB136/Anno/data$ ls -lh | sed 's/ -> .*//'
 total 136K
