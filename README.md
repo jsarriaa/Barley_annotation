@@ -28,6 +28,18 @@ Stella (BMK) protocol to clean reads:
 1. Adapter filtering: fastp parameters: -Q -y -g -Y 10 -l 100 -b 150 -B 150 --adapter_fasta
 2. rRNA filtering: retention ratio of 0.1 for mRNA, using SOAP alignment with parameters: soap -a 1.fq -b 2.fq -D /share/nas2/database/sRNA_database/current/ncRNA_integer.fasta.index -o out.pe -2 out.se -m 100 -x 1000 -u unmap.fa
 3. fastq_filter_by_Qxx filtering parameters: -q 0.85 -w 30 (Q30 ≥ 85%)
+
+--
+
+
+1. Lib prep kit:Hieff NGS Ultima Dual-mode mRNA Library Prep Kit for Illumina
+
+5’-AATGATACGGCGACCACCGAGATCTACAC[I5]ACACTCTTTCCCTACACGACGCTCTTCCGATCT-[insert]-AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC[I7]ATCTCGTATGCCGTCTTCTGCTTG-3’
+
+2. The rRNA_database combines sequences from NCBI, SILVA and Rfam and then undergoes dereplication.
+
+3.  Yes, seqkit seq --min-qual 30 --min-qual-prop 0.85, its filtering logic matches fastq_filter_by_Qxx.
+
 ```
 
 ```
