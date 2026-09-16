@@ -978,3 +978,49 @@ grep -v "#" GDB_136.csic.r1.May2026.low.gff3 | grep "gene" -c
 busco_final_primary_hc
 C:95.4%[S:93.6%,D:1.8%],F:0.4%,M:4.2%,n:6282
 
+
+###
+# Downstream post-processing (ENA PUBLICATION)
+
+wget https://github.com/enasequence/webin-cli/releases/download/9.0.3/webin-cli-9.0.3.jar
+
+#Upload the assembly:
+java -jar webin-cli-9.0.3.jar   -context genome   -manifest /agave/compbio/jsarria/GDB_136/ENA/manifest.txt   -userName Webin-42101   -password 'Zud^3g]5L-%GB!8' -validate
+
+#Prepare and upload the annotation
+cp /agave/compbio/jsarria/GDB_136/final_out/GDB_136.EEAD-CSIC.r1.Feb2026.gff3 GDB_136.gff
+# merges abutting exons, removes redundant duplicate features, and ensures Parent/Child relationships
+nohup agat_convert_sp_gxf2gxf.pl -g GDB_136.gff -o GDB_136_standardized.gff > agat.log 2>&1 &
+# recalculate and fix CDS boundaries (STOP codon errors)
+nohup agat_sp_fix_cds_phases.pl --gff GDB_136_standardized.gff --fasta GDB136_genome.fa --out GDB_136_fixed.gff > agap_fix.log 2>&1 &
+sed 's/^chr/GDB136_chr/' GDB_136_fixed.gff > GDB_136_fixed_matched.gff
+# Allow notes such as high or low confidence:
+EMBLmyGFF3 --expose_translations
+nano translation_gff_attribute_to_embl_qualifier.json
+# Add:
+"_Description": {
+   "source description": "No description",
+   "target": "product",
+   "dev comment": "Hard to march more directly than to note sadly."
+ },
+ "confidence": {
+   "source description": "Custom confidence score",
+   "target": "note",
+   "prefix": "confidence: ",
+   "dev comment": "Mapped to note to pass EMBL validation"
+ },
+ "tag": {
+   "source description": "Custom tag",
+   "target": "note",
+   "prefix": "tag: ",
+   "dev comment": "Mapped to note to pass EMBL validation"
+ }
+}
+
+EMBLmyGFF3 GDB_136_fixed_matched.gff GDB136_genome.fa -o GDB_136_annotated.embl -m "genomic DNA" -t linear -r 1 -s "Hordeum vulgare" -i "GDB136" -p "PRJEB108009"
+# Note: ensure beforehand chr names match
+gzip GDB_136_annotated.embl
+
+
+java -jar /agave/compbio/jsarria/GDB_136/ENA/webin-cli-9.0.3.jar -context genome -manifest /agave/compbio/jsarria/GDB_136/ENA/anno_Manifest.txt -userName Webin-##### -password '###############' -validate
+
