@@ -1,0 +1,8 @@
+nohup: no se tendrá en cuenta la entrada
+-connecting to MySQL db: GDB136_pasa_db
+-*** Running PASA pipeine:
+* [Fri May 22 08:52:12 2026] Running CMD: /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/scripts/cDNA_annotation_comparer.dbi -G /scratch/GDB136/new_anno/data/GDB_136.fa --CPU 32 -M 'GDB136_pasa_db'  > pasa_run.log.dir/GDB136_pasa_db.annotation_compare.2914657.out
+* [Sat May 23 01:47:24 2026] Running CMD: /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/scripts/dump_valid_annot_updates.dbi -M 'GDB136_pasa_db' -V -R -g /scratch/GDB136/new_anno/data/GDB_136.fa > GDB136_pasa_db.gene_structures_post_PASA_updates.2914657.gff3
+Error, must specify -g with the genome fasta database at /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/scripts/dump_valid_annot_updates.dbi line 82.
+Error, cmd: /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/scripts/dump_valid_annot_updates.dbi -M 'GDB136_pasa_db' -V -R -g /scratch/GDB136/new_anno/data/GDB_136.fa > GDB136_pasa_db.gene_structures_post_PASA_updates.2914657.gff3 died with ret 1280 No such file or directory at /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/PerlLib/Pipeliner.pm line 187.
+	Pipeliner::run(Pipeliner=HASH(0x557ad5ea5840)) called at /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/Launch_PASA_pipeline.pl line 1061

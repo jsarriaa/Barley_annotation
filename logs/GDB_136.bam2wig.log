@@ -1,0 +1,39 @@
+--- Starting bam2wig ---
+Message: Running bam2wig
+Start time: jue 16 abr 2026 09:18:40 CEST
+Input BAM: STAR/alignments/GDB_136_allsamples.flt.s.bam
+Output WIG: STAR/alignments/GDB_136_allsamples.flt.s.wig
+Command: perl scripts/bam2wig STAR/alignments/GDB_136_allsamples.flt.s.bam > STAR/alignments/GDB_136_allsamples.flt.s.wig
+
+bam2wig version 1.6
+jue 16 abr 2026 09:18:40 CEST
+Host: esplandian
+Working Directory: /scratch/GDB136/new_anno
+Checking dependencies
+	samtools: present at /scratch/software-phgv2/miniconda3/envs/pananno/bin/samtools
+	wigToBigWig: not found .. a bigwig file will NOT be created
+BAM file: STAR/alignments/GDB_136_allsamples.flt.s.bam
+Output Directory: STAR/alignments/GDB_136_allsamples.flt.s_bam2wig
+Ignored alignment types (sum of bits for samtools view -F): 3844
+BAM index STAR/alignments/GDB_136_allsamples.flt.s.bam.bai was not found. Generating using samtools index
+[E::hts_idx_check_range] Region 536895084..536895234 cannot be stored in a bai index. Try using a csi index
+[E::sam_index] Read 'LH00330:443:22KCGNLT4:7:1260:503:1999' with ref_name='GDB136_chr2H', ref_length=651732572, flags=163, pos=536895085 cannot be indexed
+samtools index: failed to create index for "STAR/alignments/GDB_136_allsamples.flt.s.bam": Numerical result out of range
+Failed to build BAM index
+Threshold: 0 read depth
+Strand: both
+Read Group: None -- all reads used
+Min read size: No minimum
+Max read size: No maximum
+Locus/Loci: None (whole genome)
+
+Phase One: Generating depths
+
+Phase Two: Processing depths
+
+Wiggle file written to STAR/alignments/GDB_136_allsamples.flt.s_bam2wig/GDB_136_allsamples.flt.s.wig
+
+Completed at vie 17 abr 2026 01:16:24 CEST
+
+End time: vie 17 abr 2026 01:16:25 CEST
+bam2wig completed successfully.

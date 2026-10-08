@@ -1,0 +1,77 @@
+
+#########################################################
+##### Extensive de-novo TE Annotator (EDTA) v2.2.2  #####
+##### Shujun Ou (shujun.ou.1@gmail.com)             #####
+#########################################################
+
+
+Parameters: --genome /scratch/GDB136/new_anno/genome_by_contigs/GDB136_chr4H.fasta --anno 1 --overwrite 1 --threads 16
+
+
+dom 08 mar 2026 12:40:53 CET	Dependency checking:
+	All passed!
+
+dom 08 mar 2026 12:41:08 CET	Obtain raw TE libraries using various structure-based programs: 
+dom 08 mar 2026 12:41:08 CET	EDTA_raw: Check dependencies, prepare working directories.
+
+dom 08 mar 2026 12:41:19 CET	Start to find LTR candidates.
+
+dom 08 mar 2026 12:41:19 CET	Identify LTR retrotransposon candidates from scratch.
+
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Error: Could not load sequence. Empty file or bad format.
+
+Filter sequence based on TEsorter classifications. Unclassified sequences will also be output to the clean file.
+	Usage: perl cleanup_misclas.pl sequence.fa.rexdb.cls.tsv
+	Author: Shujun Ou (shujun.ou.1@gmail.com) 10/11/2019
+	
+mv: no se puede efectuar `stat' sobre 'GDB136_chr4H.fasta.mod.LTR.intact.fa.ori.dusted.cln.cln': No existe el fichero o el directorio
+mv: no se puede efectuar `stat' sobre 'GDB136_chr4H.fasta.mod.LTR.intact.fa.ori.dusted.cln.cln.list': No existe el fichero o el directorio
+cp: no se puede efectuar `stat' sobre 'GDB136_chr4H.fasta.mod.LTR.intact.raw.fa.anno.list': No existe el fichero o el directorio
+ERROR: No such file or directory at /scratch/software-phgv2/miniconda3/envs/EDTA_env/share/EDTA/bin/output_by_list.pl line 39.
+dom 08 mar 2026 17:00:10 CET	Finish finding LTR candidates.
+
+dom 08 mar 2026 17:00:10 CET	Start to find SINE candidates.
+
+dom 08 mar 2026 17:45:13 CET	Finish finding SINE candidates.
+
+dom 08 mar 2026 17:45:13 CET	Start to find LINE candidates.
+
+dom 08 mar 2026 17:45:13 CET	Identify LINE retrotransposon candidates from scratch.
+
+lun 09 mar 2026 03:14:30 CET	Finish finding LINE candidates.
+
+lun 09 mar 2026 03:14:30 CET	Start to find TIR candidates.
+
+lun 09 mar 2026 03:14:30 CET	Identify TIR candidates from scratch.
+
+Species: others
+lun 09 mar 2026 06:59:37 CET	Finish finding TIR candidates.
+
+lun 09 mar 2026 06:59:37 CET	Start to find Helitron candidates.
+
+lun 09 mar 2026 06:59:37 CET	Identify Helitron candidates from scratch.
+
+lun 09 mar 2026 10:35:30 CET	Finish finding Helitron candidates.
+
+lun 09 mar 2026 10:35:30 CET	Execution of EDTA_raw.pl is finished!
+

@@ -1,0 +1,8 @@
+--- Starting filterIntronsFindStrand ---
+Input GFF: STAR/alignments/intron_hints.gff
+--- Standardizing FASTA headers to match GFF ---
+Creating temp FASTA file: /tmp/GDB_136_phg_temp.fa
+Command: GALBA/scripts/filterIntronsFindStrand.pl /tmp/GDB_136_phg_temp.fa STAR/alignments/intron_hints.gff --score 1 > STAR/alignments/intron_hints.flt.gff
+
+End time: mié 15 abr 2026 14:32:07 CEST
+filterIntronsFindStrand completed successfully.

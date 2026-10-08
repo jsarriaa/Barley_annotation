@@ -1,0 +1,6 @@
+1. Running AUGUSTUS/TSEBRA GTF to EVM GFF3 conversion utility...
+2. Piping output to sed to rename source from 'Augustus' to 'TSEBRA'...
+
+--- Pipeline Summary ---
+TSEBRA to EVM conversion: SUCCESS
+EVM GFF saved to: GDB_136/evm.abinitio.tsebra.gff

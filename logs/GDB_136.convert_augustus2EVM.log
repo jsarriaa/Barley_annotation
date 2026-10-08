@@ -1,0 +1,6 @@
+1. Running AUGUSTUS GFF3 conversion utility...
+Note: The output source will remain 'AUGUSTUS' (no 'sed' renaming is applied).
+
+--- Pipeline Summary ---
+Unfiltered AUGUSTUS to EVM conversion: SUCCESS
+EVM GFF saved to: GDB_136/evm.abinitio.gff

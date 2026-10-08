@@ -1,0 +1,9 @@
+--- Starting wig2hints ---
+Message: Running wig2hints
+Start time: vie 17 abr 2026 09:50:55 CEST
+Input WIG: STAR/alignments/GDB_136_allsamples.flt.s_bam2wig/GDB_136_allsamples.flt.s.wig
+Output GFF: hints/ep_hints.gff
+Command: Augustus/scripts/wig2hints.pl --margin=10 ... < STAR/alignments/GDB_136_allsamples.flt.s_bam2wig/GDB_136_allsamples.flt.s.wig > hints/ep_hints.gff
+
+End time: vie 17 abr 2026 10:21:19 CEST
+wig2hints completed successfully.

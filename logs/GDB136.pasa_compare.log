@@ -1,0 +1,15 @@
+nohup: no se tendrá en cuenta la entrada
+-connecting to MySQL db: GDB136_pasa_db
+-*** Running PASA pipeine:
+* [Wed May 20 18:47:47 2026] Running CMD: /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/scripts/cDNA_annotation_comparer.dbi -G /scratch/GDB136/new_anno/data/GDB_136.fa --CPU 32 -M 'GDB136_pasa_db'  > pasa_run.log.dir/GDB136_pasa_db.annotation_compare.559337.out
+* [Thu May 21 12:03:50 2026] Running CMD: /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/scripts/dump_valid_annot_updates.dbi -M 'GDB136_pasa_db' -V -R -g /scratch/GDB136/new_anno/data/GDB_136.fa > GDB136_pasa_db.gene_structures_post_PASA_updates.559337.gff3
+* [Thu May 21 13:05:04 2026] Running CMD: /scratch/software-phgv2/miniconda3/envs/pasa_env/opt/pasa-2.5.3/scripts/../misc_utilities/gff3_file_to_bed.pl GDB136_pasa_db.gene_structures_post_PASA_updates.559337.gff3 > GDB136_pasa_db.gene_structures_post_PASA_updates.559337.bed
+
+
+
+
+###############################################################
+## Finished.  Consider using PasaWeb to explore the results ###
+###############################################################
+
+

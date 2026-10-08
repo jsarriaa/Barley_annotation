@@ -1,0 +1,15 @@
+Filtering Stringtie assemblies with Portcullis junctions for genotype: GDB_136
+# Running junctools GTF in FILTER mode
+# Loading junctions from reference junctions file ... done.  Found 632729 junctions ( 632729 distinct ) .
+Loading transcripts ... done.
+Found 42858 transcripts.  7187 are monoexonic and 35671 are multiexonic.
+Found 132041 distinct junctions and 216722 total junctions in GTF.
+
+Doing junction level comparison ... done.
+132036 / 632729 (20.87) of valid junctions.
+132036 / 132041 (100.00) junctions supported by input.
+
+Identifying invalid multi-exonic transcripts ...  done.  Found 5 / 35671 invalid multi-exonic transcripts.
+
+Writing output to stringtie/stringtie.merged.junc_flt.gtf  ...  done.
+Filtering complete. Output file created at stringtie/stringtie.merged.junc_flt.gtf

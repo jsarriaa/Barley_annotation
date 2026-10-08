@@ -1,0 +1,68 @@
+
+#########################################################
+##### Extensive de-novo TE Annotator (EDTA) v2.2.2  #####
+##### Shujun Ou (shujun.ou.1@gmail.com)             #####
+#########################################################
+
+
+Parameters: --genome /scratch/GDB136/new_anno/genome_by_contigs/GDB136_chr3H.fasta --anno 1 --overwrite 1 --threads 16
+
+
+dom 08 mar 2026 07:49:57 CET	Dependency checking:
+	All passed!
+
+dom 08 mar 2026 07:50:12 CET	Obtain raw TE libraries using various structure-based programs: 
+dom 08 mar 2026 07:50:12 CET	EDTA_raw: Check dependencies, prepare working directories.
+
+dom 08 mar 2026 07:50:23 CET	Start to find LTR candidates.
+
+dom 08 mar 2026 07:50:23 CET	Identify LTR retrotransposon candidates from scratch.
+
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Error: Could not load sequence. Empty file or bad format.
+
+Filter sequence based on TEsorter classifications. Unclassified sequences will also be output to the clean file.
+	Usage: perl cleanup_misclas.pl sequence.fa.rexdb.cls.tsv
+	Author: Shujun Ou (shujun.ou.1@gmail.com) 10/11/2019
+	
+mv: no se puede efectuar `stat' sobre 'GDB136_chr3H.fasta.mod.LTR.intact.fa.ori.dusted.cln.cln': No existe el fichero o el directorio
+mv: no se puede efectuar `stat' sobre 'GDB136_chr3H.fasta.mod.LTR.intact.fa.ori.dusted.cln.cln.list': No existe el fichero o el directorio
+cp: no se puede efectuar `stat' sobre 'GDB136_chr3H.fasta.mod.LTR.intact.raw.fa.anno.list': No existe el fichero o el directorio
+ERROR: No such file or directory at /scratch/software-phgv2/miniconda3/envs/EDTA_env/share/EDTA/bin/output_by_list.pl line 39.
+dom 08 mar 2026 11:45:35 CET	Finish finding LTR candidates.
+
+dom 08 mar 2026 11:45:35 CET	Start to find SINE candidates.
+
+dom 08 mar 2026 12:48:49 CET	Finish finding SINE candidates.
+
+dom 08 mar 2026 12:48:49 CET	Start to find LINE candidates.
+
+dom 08 mar 2026 12:48:49 CET	Identify LINE retrotransposon candidates from scratch.
+
+dom 08 mar 2026 22:04:21 CET	Finish finding LINE candidates.
+
+dom 08 mar 2026 22:04:21 CET	Start to find TIR candidates.
+
+dom 08 mar 2026 22:04:21 CET	Identify TIR candidates from scratch.
+
+Species: others
+lun 09 mar 2026 01:49:19 CET	Finish finding TIR candidates.
+
+lun 09 mar 2026 01:49:19 CET	Start to find Helitron candidates.
+
+lun 09 mar 2026 01:49:20 CET	Identify Helitron candidates from scratch.
+
+lun 09 mar 2026 05:35:20 CET	Finish finding Helitron candidates.
+
+lun 09 mar 2026 05:35:20 CET	Execution of EDTA_raw.pl is finished!
+
+ERROR: Raw LTR results not found in GDB136_chr3H.fasta.mod.EDTA.raw/GDB136_chr3H.fasta.mod.LTR.raw.fa and GDB136_chr3H.fasta.mod.EDTA.raw/GDB136_chr3H.fasta.mod.LTR.intact.raw.fa
+	If you believe the program is working properly, this may be caused by the lack of intact LTRs in your genome. Consider to use the --force 1 parameter to overwrite this check

@@ -1,0 +1,5 @@
+--- Starting Genome Splitting for GDB_136 ---
+Input: data/GDB_136.fa
+Large sequences (>= 500001 bp) go to individual files in GDB_136/genome_chunks/
+Small sequences (< 500001 bp) go to GDB_136/genome_chunks/contigs.fa
+--- SUCCESS: Genome splitting completed ---

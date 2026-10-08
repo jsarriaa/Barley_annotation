@@ -1,0 +1,10 @@
+[M::mp_ntseq_read@11.390*1.00] read 4290256752 bases in 1954 contigs
+[M::mp_idx_build@11.390*1.00] 33519616 blocks
+[M::mp_idx_build@29.420*8.26] collected syncmers
+[M::mp_idx_build@45.459*5.70] 2190460437 kmer-block pairs
+[M::mp_idx_print_stat] 2409882 distinct k-mers; mean occ of infrequent k-mers: 775.72; 9681 frequent k-mers accounting for 328570599 occurrences
+[M::main] Version: 0.18-r281
+[M::main] CMD: miniprot -t 16 -d ./miniprot/GDB_136.mpi data/GDB_136.fa
+[M::main] Real time: 58.622 sec; CPU: 272.295 sec; Peak RSS: 50.382 GB
+--- Miniprot indexing completed successfully for GDB_136 ---
+Index saved to: ./miniprot/GDB_136.mpi

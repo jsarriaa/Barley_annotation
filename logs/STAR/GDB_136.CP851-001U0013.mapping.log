@@ -1,0 +1,8 @@
+	/scratch/software-phgv2/miniconda3/envs/barley_annotation/bin/STAR-avx2 --genomeDir /scratch/GDB136/new_anno/STAR --runThreadN 32 --readFilesIn /scratch/GDB136/new_anno/data/mRNA-seq/Unknown_CP851-001U0013_1.fasta /scratch/GDB136/new_anno/data/mRNA-seq/Unknown_CP851-001U0013_2.fasta --outFileNamePrefix /scratch/GDB136/new_anno/STAR/alignments/CP851-001U0013_ --outSAMtype BAM SortedByCoordinate --outSAMstrandField intronMotif --alignIntronMax 50000 --limitBAMsortRAM 3200000000 --genomeLoad NoSharedMemory
+	STAR version: 2.7.11b   compiled: 2025-07-24T03:06:21+0000 :/opt/conda/conda-bld/star_1753326220084/work/source
+Apr 08 16:30:13 ..... started STAR run
+Apr 08 16:30:13 ..... loading genome
+Apr 08 16:31:09 ..... started mapping
+Apr 08 16:38:54 ..... finished mapping
+Apr 08 16:38:55 ..... started sorting BAM
+Apr 08 16:44:22 ..... finished successfully

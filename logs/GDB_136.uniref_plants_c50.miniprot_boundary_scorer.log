@@ -1,0 +1,9 @@
+--- Starting Miniprot Boundary Scorer ---
+Start time: lun 13 abr 2026 16:17:13 CEST
+Input ALN: miniprot/GDB_136.uniref_tax38820_id0.5.miniprot.aln
+Output GFF: miniprot/GDB_136.uniref_plants_c50.miniprot_scored.gff
+Threads: 1 (as specified in rule)
+Command executed: miniprot-boundary-scorer/miniprot_boundary_scorer -s miniprot-boundary-scorer/blosum62.csv -o miniprot/GDB_136.uniref_plants_c50.miniprot_scored.gff < miniprot/GDB_136.uniref_tax38820_id0.5.miniprot.aln
+
+End time: lun 13 abr 2026 16:21:01 CEST
+Miniprot boundary scoring completed successfully.

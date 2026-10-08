@@ -1,0 +1,10 @@
+--- Starting Miniprothints ---
+Start time: lun 13 abr 2026 16:27:44 CEST
+Input GFF: miniprot/GDB_136.uniref_plants_c50.miniprot_scored.gff
+Working Directory: miniprothints
+Output GTF: miniprothints/miniprot.gtf
+Threads: 1 (as specified in rule)
+warning: Coverage appears to be high, --ignoreCoverage flag will be ignored 
+
+End time: lun 13 abr 2026 16:31:11 CEST
+Miniprothints completed successfully.

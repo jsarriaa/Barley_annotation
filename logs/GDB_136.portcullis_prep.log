@@ -1,0 +1,19 @@
+Portcullis V1.2.4
+
+Running portcullis in prepare mode
+----------------------------------
+
+Created symlink from "data/GDB_136.fa" to "portcullis/portcullis.genome.fa"
+Created symlink from "data/GDB_136.fa.fai" to "portcullis/portcullis.genome.fa.fai"
+Created symlink from "STAR/alignments/allsamples.bam" to "portcullis/portcullis.unsorted.alignments.bam"
+Existing BAM index not found.  Will create later.
+Provided BAM appears to be sorted already, just creating symlink instead.
+Created symlink from "/scratch/GDB136/new_anno/STAR/alignments/allsamples.bam" to "portcullis/portcullis.sorted.alignments.bam"
+Indexing BAM using command "samtools index -c portcullis/portcullis.sorted.alignments.bam" ... done.
+BAM index created at: "portcullis/portcullis.sorted.alignments.bam.csi"
+ - BAM Index - Wall time taken: 419.8s
+
+
+Portcullis prep completed.
+Total runtime: 419.8s
+

@@ -1,0 +1,4 @@
+Running grep command to remove EVM_elm lines...
+Successfully filtered ELM annotations.
+Final file size:
+-rw-r--r-- 1 jsarria compbio 52M may 13 12:59 GDB_136/GDB_136.run2.EVM.no_ELM.gff3

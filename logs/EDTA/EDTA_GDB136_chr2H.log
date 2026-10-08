@@ -1,0 +1,94 @@
+
+#########################################################
+##### Extensive de-novo TE Annotator (EDTA) v2.2.2  #####
+##### Shujun Ou (shujun.ou.1@gmail.com)             #####
+#########################################################
+
+
+Parameters: --genome /scratch/GDB136/new_anno/genome_by_contigs/GDB136_chr2H.fasta --anno 1 --overwrite 1 --threads 16
+
+
+sáb 07 mar 2026 10:21:31 CET	Dependency checking:
+	All passed!
+
+sáb 07 mar 2026 10:21:49 CET	Obtain raw TE libraries using various structure-based programs: 
+sáb 07 mar 2026 10:21:49 CET	EDTA_raw: Check dependencies, prepare working directories.
+
+sáb 07 mar 2026 10:22:04 CET	Start to find LTR candidates.
+
+sáb 07 mar 2026 10:22:04 CET	Identify LTR retrotransposon candidates from scratch.
+
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+Killed
+sáb 07 mar 2026 14:46:45 CET	Finish finding LTR candidates.
+
+sáb 07 mar 2026 14:46:45 CET	Start to find SINE candidates.
+
+sáb 07 mar 2026 15:44:01 CET	Finish finding SINE candidates.
+
+sáb 07 mar 2026 15:44:01 CET	Start to find LINE candidates.
+
+sáb 07 mar 2026 15:44:01 CET	Identify LINE retrotransposon candidates from scratch.
+
+dom 08 mar 2026 01:54:23 CET	Finish finding LINE candidates.
+
+dom 08 mar 2026 01:54:23 CET	Start to find TIR candidates.
+
+dom 08 mar 2026 01:54:23 CET	Identify TIR candidates from scratch.
+
+Species: others
+dom 08 mar 2026 05:59:59 CET	Finish finding TIR candidates.
+
+dom 08 mar 2026 05:59:59 CET	Start to find Helitron candidates.
+
+dom 08 mar 2026 05:59:59 CET	Identify Helitron candidates from scratch.
+
+dom 08 mar 2026 09:30:01 CET	Finish finding Helitron candidates.
+
+dom 08 mar 2026 09:30:01 CET	Execution of EDTA_raw.pl is finished!
+
+dom 08 mar 2026 09:30:02 CET	Obtain raw TE libraries finished.
+	All intact TEs found by EDTA: 
+		GDB136_chr2H.fasta.mod.EDTA.intact.raw.fa 
+		GDB136_chr2H.fasta.mod.EDTA.intact.raw.gff3
+
+dom 08 mar 2026 09:30:02 CET	Perform EDTA advance filtering for raw TE candidates and generate the stage 1 library: 
+
+dom 08 mar 2026 10:21:13 CET	EDTA advance filtering finished.
+
+dom 08 mar 2026 10:21:13 CET	Perform EDTA final steps to generate a non-redundant comprehensive TE library.
+
+	Skipping the RepeatModeler results (--sensitive 0).
+		Run EDTA.pl --step final --sensitive 1 if you want to add RepeatModeler results.
+
+	Skipping the CDS cleaning step (--cds [File]) since no CDS file is provided or it's empty.
+
+dom 08 mar 2026 10:47:41 CET	EDTA final stage finished! You may check out:
+		The final EDTA TE library: GDB136_chr2H.fasta.mod.EDTA.TElib.fa
+dom 08 mar 2026 10:47:41 CET	Perform post-EDTA analysis for whole-genome annotation:
+
+dom 08 mar 2026 10:47:41 CET	Homology-based annotation of TEs using GDB136_chr2H.fasta.mod.EDTA.TElib.fa from scratch.
+
+dom 08 mar 2026 12:34:02 CET	TE annotation using the EDTA library has finished! Check out:
+		Whole-genome TE annotation (total TE: 85.49%): GDB136_chr2H.fasta.mod.EDTA.TEanno.gff3
+		Whole-genome TE annotation summary: GDB136_chr2H.fasta.mod.EDTA.TEanno.sum
+		Whole-genome TE divergence plot: GDB136_chr2H.fasta.mod_divergence_plot.pdf
+		Whole-genome TE density plot: GDB136_chr2H.fasta.mod.EDTA.TEanno.density_plots.pdf
+		Low-threshold TE masking for MAKER gene annotation (masked: 60.55%): GDB136_chr2H.fasta.mod.MAKER.masked
+
+dom 08 mar 2026 12:34:06 CET	Evaluate the level of inconsistency for whole-genome TE annotation:
+
+dom 08 mar 2026 12:40:52 CET	Evaluation of TE annotation finished! Check out these files:
+
+				Overall: GDB136_chr2H.fasta.mod.EDTA.TE.fa.stat.all.sum
+				Nested: GDB136_chr2H.fasta.mod.EDTA.TE.fa.stat.nested.sum
+				Non-nested: GDB136_chr2H.fasta.mod.EDTA.TE.fa.stat.redun.sum
+
+		If you want to learn more about the formatting and information of these files, please visit:
+			https://github.com/oushujun/EDTA/wiki/Making-sense-of-EDTA-usage-and-outputs---Q&A
+

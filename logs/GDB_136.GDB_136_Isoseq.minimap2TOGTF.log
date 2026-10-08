@@ -1,0 +1,13 @@
+Starting conversion for GDB_136_Isoseq (Genotype: GDB_136)
+Input BAM: data//Isoseq_GDB_136_Isoseq.mm2.bam
+Output GTF: data//GDB_136_Isoseq.mm2.gtf
+--- Step 1: Converting BAM to BED12 ---
+--- Step 2: Converting BED to genePred (GP) ---
+--- Step 3: Converting genePred to GTF ---
+--- Step 4: Converting BED to PSL ---
+--- Conversion completed successfully ---
+Output files created:
+  BED: data//GDB_136_Isoseq.mm2.bed
+  GP:  data//GDB_136_Isoseq.mm2.gp
+  GTF: data//GDB_136_Isoseq.mm2.gtf
+  PSL: data//GDB_136_Isoseq.mm2.psl

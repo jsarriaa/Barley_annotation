@@ -1,0 +1,12 @@
+--- Starting sort_flt_BAM ---
+Message: Sorting BAM
+Start time: mié 15 abr 2026 08:24:22 CEST
+Input BAM: STAR/alignments/GDB_136_allsamples.flt.bam
+Output BAM: STAR/alignments/GDB_136_allsamples.flt.s.bam
+Threads: 8
+Memory per thread (-m): 2G
+Command: /scratch/software-phgv2/miniconda3/envs/pananno/bin/samtools sort -@ 8 -m 2G -o STAR/alignments/GDB_136_allsamples.flt.s.bam STAR/alignments/GDB_136_allsamples.flt.bam
+[bam_sort_core] merging from 1 files and 8 in-memory blocks...
+
+End time: mié 15 abr 2026 09:15:35 CEST
+sort_flt_BAM completed successfully.

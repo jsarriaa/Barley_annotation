@@ -1,0 +1,140 @@
+nohup: no se tendrá en cuenta la entrada
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 8
+Rules claiming more threads will be scaled down.
+Job stats:
+job         count    min threads    max threads
+--------  -------  -------------  -------------
+all             1              1              1
+writeGFF        1              1              1
+total           2              1              1
+
+Select jobs to execute...
+
+[Tue May 26 12:14:46 2026]
+Job 5: tagProteins
+Reason: Missing output files: GDB_136/GDB_136.tmp.gff3
+
+                               old_mRNA_id  ...                                                 GO
+0      mikado.contig_corrected_v1_1846G1.1  ...                                                NaN
+1      mikado.contig_corrected_v1_2706G1.1  ...  GO:0000287(InterPro)|GO:0016984(InterPro)|GO:0...
+2      mikado.contig_corrected_v1_2209G2.1  ...                                                NaN
+3      mikado.contig_corrected_v1_1886G1.1  ...                               GO:0008137(InterPro)
+4      mikado.contig_corrected_v1_1644G1.1  ...                                                NaN
+...                                    ...  ...                                                ...
+87018           mikado.GDB136_chr2HG7682.1  ...                               GO:0005515(InterPro)
+87019           mikado.GDB136_chr2HG7675.1  ...  GO:0004672(InterPro)|GO:0006468(InterPro)|GO:0...
+87020           mikado.GDB136_chr2HG7683.2  ...                                                NaN
+87021           mikado.GDB136_chr2HG7683.1  ...                                                NaN
+87022           mikado.GDB136_chr2HG7684.1  ...          GO:0003676(InterPro)|GO:0003723(InterPro)
+
+[87023 rows x 20 columns]
+                                   new_mRNA_id  ...                        old_gene_id
+0      H.VULGARE.GDB_136.r1.ctg1426G00000010.1  ...  mikado.contig_corrected_v1_1426G5
+1      H.VULGARE.GDB_136.r1.ctg1426G00000020.1  ...  mikado.contig_corrected_v1_1426G3
+2      H.VULGARE.GDB_136.r1.ctg1426G00000030.1  ...  mikado.contig_corrected_v1_1426G2
+3      H.VULGARE.GDB_136.r1.ctg1426G00000040.1  ...  mikado.contig_corrected_v1_1426G8
+4      H.VULGARE.GDB_136.r1.ctg1426G00000050.1  ...  mikado.contig_corrected_v1_1426G6
+...                                        ...  ...                                ...
+87018  H.VULGARE.GDB_136.r1.ctg2627G00749250.1  ...  mikado.contig_corrected_v1_2627G8
+87019  H.VULGARE.GDB_136.r1.ctg2627G00749260.1  ...  mikado.contig_corrected_v1_2627G4
+87020  H.VULGARE.GDB_136.r1.ctg2627G00749270.1  ...  mikado.contig_corrected_v1_2627G3
+87021  H.VULGARE.GDB_136.r1.ctg2627G00749280.1  ...  mikado.contig_corrected_v1_2627G7
+87022  H.VULGARE.GDB_136.r1.ctg2627G00749290.1  ...  mikado.contig_corrected_v1_2627G9
+
+[87023 rows x 4 columns]
+                               old_mRNA_id  ...                        old_gene_id
+0      mikado.contig_corrected_v1_1846G1.1  ...  mikado.contig_corrected_v1_1846G1
+1      mikado.contig_corrected_v1_2706G1.1  ...  mikado.contig_corrected_v1_2706G1
+2      mikado.contig_corrected_v1_2209G2.1  ...  mikado.contig_corrected_v1_2209G2
+3      mikado.contig_corrected_v1_1886G1.1  ...  mikado.contig_corrected_v1_1886G1
+4      mikado.contig_corrected_v1_1644G1.1  ...  mikado.contig_corrected_v1_1644G1
+...                                    ...  ...                                ...
+87018           mikado.GDB136_chr2HG7682.1  ...           mikado.GDB136_chr2HG7682
+87019           mikado.GDB136_chr2HG7675.1  ...           mikado.GDB136_chr2HG7675
+87020           mikado.GDB136_chr2HG7683.2  ...           mikado.GDB136_chr2HG7683
+87021           mikado.GDB136_chr2HG7683.1  ...           mikado.GDB136_chr2HG7683
+87022           mikado.GDB136_chr2HG7684.1  ...           mikado.GDB136_chr2HG7684
+
+[87023 rows x 23 columns]
+                                    confidence
+old_mRNA_id                                   
+mikado.contig_corrected_v1_1846G1.1        low
+mikado.contig_corrected_v1_2706G1.1        low
+mikado.contig_corrected_v1_2209G2.1        low
+mikado.contig_corrected_v1_1886G1.1       high
+mikado.contig_corrected_v1_1644G1.1        low
+...                                        ...
+mikado.GDB136_chr2HG7682.1                high
+mikado.GDB136_chr2HG7675.1                high
+mikado.GDB136_chr2HG7683.2                high
+mikado.GDB136_chr2HG7683.1                high
+mikado.GDB136_chr2HG7684.1                high
+
+[87023 rows x 1 columns]
+                               old_mRNA_id  ... confidence
+0      mikado.contig_corrected_v1_1846G1.1  ...        low
+1      mikado.contig_corrected_v1_2706G1.1  ...        low
+2      mikado.contig_corrected_v1_2209G2.1  ...        low
+3      mikado.contig_corrected_v1_1886G1.1  ...       high
+4      mikado.contig_corrected_v1_1644G1.1  ...        low
+...                                    ...  ...        ...
+87018           mikado.GDB136_chr2HG7682.1  ...       high
+87019           mikado.GDB136_chr2HG7675.1  ...       high
+87020           mikado.GDB136_chr2HG7683.2  ...       high
+87021           mikado.GDB136_chr2HG7683.1  ...       high
+87022           mikado.GDB136_chr2HG7684.1  ...       high
+
+[87023 rows x 24 columns]
+                                                 tag
+old_mRNA_id                                         
+mikado.contig_corrected_v1_1846G1.1   protein_coding
+mikado.contig_corrected_v1_2706G1.1   protein_coding
+mikado.contig_corrected_v1_2209G2.1   protein_coding
+mikado.contig_corrected_v1_1886G1.1  plastid-related
+mikado.contig_corrected_v1_1644G1.1   protein_coding
+...                                              ...
+mikado.GDB136_chr2HG7682.1            protein_coding
+mikado.GDB136_chr2HG7675.1            protein_coding
+mikado.GDB136_chr2HG7683.2           plastid-related
+mikado.GDB136_chr2HG7683.1           plastid-related
+mikado.GDB136_chr2HG7684.1            protein_coding
+
+[87023 rows x 1 columns]
+Index(['old_mRNA_id', 'gene', 'source', 'seqid', 'start', 'end', 'bpcdss',
+       'ncdss', 'length', 'status', 'primconf', 'secconf',
+       'Protein_Description', 'Tags', 'accession', 'Pfamtag', 'Famliy',
+       'Accession', 'Description', 'GO', 'new_mRNA_id', 'new_gene_id',
+       'old_gene_id', 'confidence', 'tag'],
+      dtype='object')
+                                   transcript_id  ...                                                 GO
+0        H.VULGARE.GDB_136.r1.ctg1846G00002210.1  ...                                                NaN
+1        H.VULGARE.GDB_136.r1.ctg2706G00006400.1  ...  GO:0000287(InterPro)|GO:0016984(InterPro)|GO:0...
+2        H.VULGARE.GDB_136.r1.ctg2209G00008000.1  ...                                                NaN
+3        H.VULGARE.GDB_136.r1.ctg1886G00010070.1  ...                               GO:0008137(InterPro)
+4        H.VULGARE.GDB_136.r1.ctg1644G00010170.1  ...                                                NaN
+...                                          ...  ...                                                ...
+87018  H.VULGARE.GDB_136.r1.GDB136_2HG00558810.1  ...                               GO:0005515(InterPro)
+87019  H.VULGARE.GDB_136.r1.GDB136_2HG00577850.1  ...  GO:0004672(InterPro)|GO:0006468(InterPro)|GO:0...
+87020  H.VULGARE.GDB_136.r1.GDB136_2HG00576570.1  ...                                                NaN
+87021  H.VULGARE.GDB_136.r1.GDB136_2HG00576570.2  ...                                                NaN
+87022  H.VULGARE.GDB_136.r1.GDB136_2HG00594830.1  ...          GO:0003676(InterPro)|GO:0003723(InterPro)
+
+[87023 rows x 9 columns]
+[Tue May 26 12:17:29 2026]
+Finished job 5.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Tue May 26 12:17:29 2026]
+localrule all:
+    input: GDB_136/GDB_136.fa, GDB_136/GDB_136.gff3, GDB_136/HRD.tsv, GDB_136/TEtags.tsv, GDB_136/interPro_tags.csv, GDB_136/GDB_136.tmp.gff3
+    jobid: 0
+    reason: Input files updated by another job: GDB_136/GDB_136.tmp.gff3
+    resources: tmpdir=/tmp
+
+[Tue May 26 12:17:29 2026]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2026-05-26T121445.848346.snakemake.log

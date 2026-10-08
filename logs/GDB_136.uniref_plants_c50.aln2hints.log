@@ -1,0 +1,8 @@
+--- Starting aln2hints_hc (Custom Python Logic) ---
+Start time: lun 13 abr 2026 17:00:18 CEST
+Input GFF: miniprothints/hc.gff
+Output GFF: miniprothints/GDB_136_uniref_tax38820.hc.hints.gff
+Command executed: python scripts/process_hc_gff.py miniprothints/hc.gff miniprothints/GDB_136_uniref_tax38820.hc.hints.gff
+
+End time: lun 13 abr 2026 17:00:19 CEST
+aln2hints_hc processing completed successfully.

@@ -1,0 +1,5 @@
+1. Running miniprot_GFF_2_EVM_alignment_GFF3.py utility...
+Done! Read 2976787 lines
+--- Pipeline Summary ---
+Miniprot to EVM conversion: SUCCESS
+EVM GFF saved to: GDB_136/evm.uniref_plants_c50.miniprot_aln.gff

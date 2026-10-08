@@ -1,0 +1,12 @@
+Identifying ORFs for GDB_136.
+Input FASTA: transcripts/GDB_136_mikado_prepared.fasta
+Output GFF: transcripts/GDB_136_mikado_transcripts.orfs.gff
+--- Starting Prodigal ---
+--- Prodigal completed successfully for GDB_136 ---
+ORFs saved to: transcripts/GDB_136_mikado_transcripts.orfs.gff
+Identifying ORFs for GDB_136.
+Input FASTA: transcripts/GDB_136_mikado_prepared.fasta
+Output GFF: transcripts/GDB_136_mikado_transcripts.orfs.gff
+--- Starting Prodigal ---
+--- Prodigal completed successfully for GDB_136 ---
+ORFs saved to: transcripts/GDB_136_mikado_transcripts.orfs.gff

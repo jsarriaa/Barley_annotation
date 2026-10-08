@@ -1,0 +1,8 @@
+--- Starting join_prothints (Sorting and Merging) ---
+Start time: lun 13 abr 2026 17:07:35 CEST
+Input GFF: miniprot/GDB_136_uniref_plants_c50.miniprot_scored.hints.gff
+Output GFF: miniprot/miniprot.hints.gff
+Threads: 1 (as specified in rule)
+
+End time: lun 13 abr 2026 17:07:58 CEST
+join_prothints completed successfully.

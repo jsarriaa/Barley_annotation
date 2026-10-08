@@ -1,0 +1,4 @@
+--- Starting GFF conversion for EVM (Helixer) for GDB_136 ---
+Input: GDB_136/GDB_136.helixer.combined.gff3
+Output: GDB_136/evm.abinitio.helixer.gff
+--- SUCCESS: GFF conversion (Helixer) completed ---

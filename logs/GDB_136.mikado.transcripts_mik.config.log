@@ -1,0 +1,24 @@
+Configuring Mikado for GDB_136.
+Input table: transcripts/GDB_136.mikado.tbl
+Reference genome: data/GDB_136.fa
+Junctions BED: portcullis/GDB_136.junctions.bed
+Output YAML: transcripts/GDB_136.mikado.config.yaml
+--- Starting Mikado configuration ---
+--- Mikado configuration completed successfully for GDB_136 ---
+Configuration YAML saved to: transcripts/GDB_136.mikado.config.yaml
+Configuring Mikado for GDB_136.
+Input table: transcripts/GDB_136.mikado.tbl
+Reference genome: data/GDB_136.fa
+Junctions BED: portcullis/GDB_136.junctions.bed
+Output YAML: transcripts/GDB_136.mikado.config.yaml
+--- Starting Mikado configuration ---
+--- Mikado configuration completed successfully for GDB_136 ---
+Configuration YAML saved to: transcripts/GDB_136.mikado.config.yaml
+Configuring Mikado for GDB_136.
+Input table: transcripts/GDB_136.mikado.tbl
+Reference genome: data/GDB_136.fa
+Junctions BED: portcullis/GDB_136.junctions.bed
+Output YAML: transcripts/GDB_136.mikado.config.yaml
+--- Starting Mikado configuration ---
+--- Mikado configuration completed successfully for GDB_136 ---
+Configuration YAML saved to: transcripts/GDB_136.mikado.config.yaml

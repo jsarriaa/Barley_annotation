@@ -1,0 +1,10 @@
+--- Starting samtools sort (by read name) ---
+Start time: lun 13 abr 2026 17:12:19 CEST
+Input BAM: STAR/alignments/allsamples.bam
+Output BAM: STAR/alignments/GDB_136_allsamples.s.bam
+Threads: 32
+Command executed: samtools sort -@ 32 -n -m 2G -o STAR/alignments/GDB_136_allsamples.s.bam STAR/alignments/allsamples.bam
+[bam_sort_core] merging from 11 files and 32 in-memory blocks...
+
+End time: lun 13 abr 2026 18:12:23 CEST
+samtools sort completed successfully.

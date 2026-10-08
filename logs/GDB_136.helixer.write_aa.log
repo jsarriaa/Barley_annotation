@@ -1,0 +1,4 @@
+--- Starting Protein Translation for GDB_136 ---
+Input CDS: GDB_136/GDB_136.helixer.combined.cds.fa
+Output Protein: GDB_136/GDB_136.helixer.combined.aa.fa
+--- SUCCESS: Protein translation completed ---

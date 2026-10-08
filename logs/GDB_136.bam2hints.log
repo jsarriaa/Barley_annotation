@@ -1,0 +1,12 @@
+--- Starting bam2hints ---
+Message: Running bam2hints
+Start time: mié 15 abr 2026 11:20:17 CEST
+Input BAM: STAR/alignments/GDB_136_allsamples.flt.s.bam
+Output GFF: STAR/alignments/intron_hints.gff
+Threads: 16
+Command: /scratch/software-phgv2/miniconda3/envs/pananno/bin/bam2hints --intronsonly --in=STAR/alignments/GDB_136_allsamples.flt.s.bam --out=STAR/alignments/intron_hints.gff
+Wait a moment, calculating maximum block size that needs to be allocated... .. done
+
+
+End time: mié 15 abr 2026 13:31:17 CEST
+bam2hints completed successfully.

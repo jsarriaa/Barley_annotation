@@ -1,0 +1,8 @@
+[M::mm_idx_gen::86.079*1.58] collected minimizers
+[M::mm_idx_gen::104.491*1.82] sorted minimizers
+[M::main::124.711*1.69] loaded/built the index for 1954 target sequence(s)
+[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1954
+[M::mm_idx_stat::125.504*1.68] distinct minimizers: 95156085 (46.50% are singletons); average occurrences: 8.432; average spacing: 5.347; total length: 4290256752
+[M::main] Version: 2.26-r1175
+[M::main] CMD: minimap2 -d GDB_136.mmi data/GDB_136.fa
+[M::main] Real time: 125.841 sec; CPU: 211.628 sec; Peak RSS: 16.788 GB

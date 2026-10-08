@@ -1,0 +1,10 @@
+--- Starting merge_extrinsic_hints ---
+Message: merging intron and ep hints
+Start time: vie 17 abr 2026 11:42:06 CEST
+Input Intron GFF: STAR/alignments/intron_hints.flt.gff
+Input EP GFF: hints/ep_hints.gff
+Output GFF: STAR/alignments/hints.intron_extrinsic.gff
+Command: cat {input.intron} {input.ep} | sort -n -k 4,4 | sort -s -n -k 5,5 | sort -s -k 3,3 | sort -s -k 1,1 | join_mult_hints.pl > STAR/alignments/hints.intron_extrinsic.gff
+
+End time: vie 17 abr 2026 11:44:11 CEST
+merge_extrinsic_hints completed successfully.

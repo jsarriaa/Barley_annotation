@@ -1,0 +1,8 @@
+--- Starting EDTA2hints ---
+Message: Converting EDTA/all_TEanno_combined_and_sorted.gff3
+Start time: 2026-04-17 13:28:35
+Input TE File: EDTA/all_TEanno_combined_and_sorted.gff3
+Output GFF Hints: hints/hints.EDTA.gff
+
+EDTA2hints completed successfully.
+End time: 2026-04-17 13:28:42

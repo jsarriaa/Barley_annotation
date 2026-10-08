@@ -1,0 +1,5 @@
+1. Running align_GTF_to_align_GFF3.pl utility...
+
+--- Pipeline Summary ---
+StringTie to EVM conversion: SUCCESS
+EVM GFF saved to: GDB_136/evm.stringtie_transcripts.gff

@@ -1,0 +1,14 @@
+Executing Python script: scripts/extract_supported.py
+Input GFF (Scores): GDB_136/augustus.hints.all_combined.gff
+Input GFF3 (Features): GDB_136/augustus.hints.all_combined.gff3
+Output GFF3: GDB_136/augustus.hints.all_combined.supported.gff3
+GFFutils DB: GDB_136/augustus.hints.all_combined.gff3.db
+Step 1: Identifying supported genes (support > 0) from GFF...
+Found 37537 supported genes.
+Step 2: Creating/Loading gffutils database...
+Step 3: Extracting features for supported genes...
+Extraction complete.
+
+--- Pipeline Summary ---
+Supported gene extraction: SUCCESS
+Output saved to: GDB_136/augustus.hints.all_combined.supported.gff3

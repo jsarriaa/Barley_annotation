@@ -1,0 +1,116 @@
+nohup: no se tendrá en cuenta la entrada
+The flag 'directory' used in rule all is only valid for outputs, not inputs.
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Job stats:
+job                  count    min threads    max threads
+-----------------  -------  -------------  -------------
+all                      1              1              1
+combine_Interpro         1              1              1
+getHRD                   1              1              1
+write_hc_proteins        5              1              1
+total                    8              1              1
+
+Select jobs to execute...
+
+[Tue May 26 09:22:16 2026]
+Job 17: writing HC protein sequences to file
+Reason: Missing output files: GDB_136/cocla/GDB_136.0.66.hc.aa.fa
+
+[Tue May 26 09:22:16 2026]
+Job 19: writing HC protein sequences to file
+Reason: Missing output files: GDB_136/cocla/GDB_136.0.8.hc.aa.fa
+
+[Tue May 26 09:22:16 2026]
+Job 18: writing HC protein sequences to file
+Reason: Missing output files: GDB_136/cocla/GDB_136.0.75.hc.aa.fa
+
+[Tue May 26 09:22:16 2026]
+Job 21: writing HC protein sequences to file
+Reason: Missing output files: GDB_136/cocla/GDB_136.0.95.hc.aa.fa
+
+[Tue May 26 09:22:16 2026]
+Job 16: Prot scribing
+Reason: Missing output files: GDB_136/cocla/GDB_136.HRD.tsv
+
+
+[Tue May 26 09:22:16 2026]
+Job 8: Combining interpro results
+Reason: Missing output files: GDB_136/cocla/results.GDB_136.interpro.tsv
+
+
+[Tue May 26 09:22:16 2026]
+Job 20: writing HC protein sequences to file
+Reason: Missing output files: GDB_136/cocla/GDB_136.0.9.hc.aa.fa
+
+The flag 'directory' used in rule all is only valid for outputs, not inputs.
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=8000, mem_mib=7630, nodes=1, load=1, threads=1, time=480
+Select jobs to execute...
+The flag 'directory' used in rule all is only valid for outputs, not inputs.
+Building DAG of jobs...
+The flag 'directory' used in rule all is only valid for outputs, not inputs.
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=8000, mem_mib=7630, nodes=1, load=1, threads=1, time=480
+Select jobs to execute...
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=8000, mem_mib=7630, nodes=1, load=1, threads=1, time=480
+Select jobs to execute...
+The flag 'directory' used in rule all is only valid for outputs, not inputs.
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=8000, mem_mib=7630, nodes=1, load=1, threads=1, time=480
+Select jobs to execute...
+The flag 'directory' used in rule all is only valid for outputs, not inputs.
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=8000, mem_mib=7630, nodes=1, load=1, threads=1, time=480
+Select jobs to execute...
+[Tue May 26 09:22:19 2026]
+Finished job 18.
+1 of 8 steps (12%) done
+[Tue May 26 09:22:19 2026]
+Finished job 20.
+2 of 8 steps (25%) done
+[Tue May 26 09:22:19 2026]
+Finished job 19.
+3 of 8 steps (38%) done
+[Tue May 26 09:22:19 2026]
+Finished job 21.
+4 of 8 steps (50%) done
+[Tue May 26 09:22:19 2026]
+Finished job 17.
+5 of 8 steps (62%) done
+[Tue May 26 09:22:23 2026]
+Finished job 8.
+6 of 8 steps (75%) done
+[Tue May 26 09:23:23 2026]
+Finished job 16.
+7 of 8 steps (88%) done
+Select jobs to execute...
+
+[Tue May 26 09:23:23 2026]
+localrule all:
+    input: GDB_136/cocla/GDB_136.tidy.gff, GDB_136/cocla/GDB_136.tidy.cds.fa, GDB_136/cocla/GDB_136.tidy.aa.fa, GDB_136/cocla/prot_chunks, GDB_136/cocla/results.GDB_136.trep.blp, GDB_136/cocla/results.GDB_136.sprot.blp, GDB_136/cocla/results.GDB_136.poales.blp, GDB_136/cocla/results.GDB_136.interpro.tsv, GDB_136/cocla/GDB_136.cds_stats.csv, GDB_136/cocla/GDB_136.transcript_stats.csv, GDB_136/cocla/GDB_136.0.66.cocla.csv, GDB_136/cocla/GDB_136.0.75.cocla.csv, GDB_136/cocla/GDB_136.0.8.cocla.csv, GDB_136/cocla/GDB_136.0.9.cocla.csv, GDB_136/cocla/GDB_136.0.95.cocla.csv, GDB_136/cocla/GDB_136.HRD.tsv, GDB_136/cocla/GDB_136.0.66.hc.aa.fa, GDB_136/cocla/GDB_136.0.75.hc.aa.fa, GDB_136/cocla/GDB_136.0.8.hc.aa.fa, GDB_136/cocla/GDB_136.0.9.hc.aa.fa, GDB_136/cocla/GDB_136.0.95.hc.aa.fa
+    jobid: 0
+    reason: Input files updated by another job: GDB_136/cocla/GDB_136.0.9.hc.aa.fa, GDB_136/cocla/GDB_136.0.66.hc.aa.fa, GDB_136/cocla/results.GDB_136.interpro.tsv, GDB_136/cocla/GDB_136.0.75.hc.aa.fa, GDB_136/cocla/GDB_136.0.8.hc.aa.fa, GDB_136/cocla/GDB_136.HRD.tsv, GDB_136/cocla/GDB_136.0.95.hc.aa.fa
+    resources: tmpdir=/tmp
+
+[Tue May 26 09:23:23 2026]
+Finished job 0.
+8 of 8 steps (100%) done
+Complete log: .snakemake/log/2026-05-26T092215.799725.snakemake.log

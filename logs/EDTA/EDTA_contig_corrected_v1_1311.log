@@ -1,0 +1,74 @@
+
+#########################################################
+##### Extensive de-novo TE Annotator (EDTA) v2.2.2  #####
+##### Shujun Ou (shujun.ou.1@gmail.com)             #####
+#########################################################
+
+
+Parameters: --genome /scratch/GDB136/new_anno/genome_by_contigs/contig_corrected_v1_1311.fasta --anno 1 --overwrite 1 --threads 16
+
+
+vie 06 mar 2026 21:47:19 CET	Dependency checking:
+	All passed!
+
+vie 06 mar 2026 21:47:21 CET	The longest sequence ID in the genome contains 24 characters, which is longer than the limit (13)
+	Trying to reformat seq IDs...
+		Attempt 1...
+vie 06 mar 2026 21:47:21 CET	Seq ID conversion successful!
+
+vie 06 mar 2026 21:47:21 CET	Obtain raw TE libraries using various structure-based programs: 
+vie 06 mar 2026 21:47:21 CET	EDTA_raw: Check dependencies, prepare working directories.
+
+vie 06 mar 2026 21:47:32 CET	Start to find LTR candidates.
+
+vie 06 mar 2026 21:47:32 CET	Identify LTR retrotransposon candidates from scratch.
+
+awk: fatal: no se puede abrir el fichero «contig_corrected_v1_1311.fasta.mod.pass.list» para lectura: No existe el fichero o el directorio
+Warning: LOC list - is empty.
+Error: Could not load sequence. Empty file or bad format.
+
+Filter sequence based on TEsorter classifications. Unclassified sequences will also be output to the clean file.
+	Usage: perl cleanup_misclas.pl sequence.fa.rexdb.cls.tsv
+	Author: Shujun Ou (shujun.ou.1@gmail.com) 10/11/2019
+	
+mv: no se puede efectuar `stat' sobre 'contig_corrected_v1_1311.fasta.mod.LTR.intact.fa.ori.dusted.cln.cln': No existe el fichero o el directorio
+mv: no se puede efectuar `stat' sobre 'contig_corrected_v1_1311.fasta.mod.LTR.intact.fa.ori.dusted.cln.cln.list': No existe el fichero o el directorio
+cp: no se puede efectuar `stat' sobre 'contig_corrected_v1_1311.fasta.mod.LTR.intact.raw.fa.anno.list': No existe el fichero o el directorio
+ERROR: No such file or directory at /scratch/software-phgv2/miniconda3/envs/EDTA_env/share/EDTA/bin/output_by_list.pl line 39.
+
+	perl filter_gff3.pl file.gff3 file.list > new.gff3
+
+vie 06 mar 2026 21:47:51 CET	Warning: The LTR result file has 0 bp!
+
+vie 06 mar 2026 21:47:51 CET	Start to find SINE candidates.
+
+vie 06 mar 2026 21:47:53 CET	Warning: The SINE result file has 0 bp!
+
+vie 06 mar 2026 21:47:53 CET	Start to find LINE candidates.
+
+vie 06 mar 2026 21:47:53 CET	Identify LINE retrotransposon candidates from scratch.
+
+vie 06 mar 2026 21:50:33 CET	Warning: The LINE result file has 0 bp!
+
+vie 06 mar 2026 21:50:33 CET	Start to find TIR candidates.
+
+vie 06 mar 2026 21:50:33 CET	Identify TIR candidates from scratch.
+
+Species: others
+Can't open ./TIR-Learner-Result/TIR-Learner_FinalAnn.fa: No existe el fichero o el directorio at /scratch/software-phgv2/miniconda3/envs/EDTA_env/share/EDTA/bin/rename_tirlearner.pl line 19.
+Warning: LOC list contig_corrected_v1_1311.fasta.mod.TIR.ext30.list is empty.
+Error: Could not load sequence. Empty file or bad format.
+
+Filter sequence based on TEsorter classifications. Unclassified sequences will also be output to the clean file.
+	Usage: perl cleanup_misclas.pl sequence.fa.rexdb.cls.tsv
+	Author: Shujun Ou (shujun.ou.1@gmail.com) 10/11/2019
+	
+mv: no se puede efectuar `stat' sobre 'contig_corrected_v1_1311.fasta.mod.TIR.ext30.fa.pass.fa.dusted.cln.cln': No existe el fichero o el directorio
+cp: no se puede efectuar `stat' sobre 'contig_corrected_v1_1311.fasta.mod.TIR.ext30.fa.pass.fa.dusted.cln.cln.list': No existe el fichero o el directorio
+cp: no se puede efectuar `stat' sobre 'contig_corrected_v1_1311.fasta.mod.TIR.intact.raw.fa.anno.list': No existe el fichero o el directorio
+Can't open ./TIR-Learner-Result/TIR-Learner_FinalAnn.gff3: No existe el fichero o el directorio.
+ERROR: No such file or directory at /scratch/software-phgv2/miniconda3/envs/EDTA_env/share/EDTA/bin/output_by_list.pl line 39.
+Error: TIR results not found!
+
+ERROR: Raw LTR results not found in contig_corrected_v1_1311.fasta.mod.EDTA.raw/contig_corrected_v1_1311.fasta.mod.LTR.raw.fa and contig_corrected_v1_1311.fasta.mod.EDTA.raw/contig_corrected_v1_1311.fasta.mod.LTR.intact.raw.fa
+	If you believe the program is working properly, this may be caused by the lack of intact LTRs in your genome. Consider to use the --force 1 parameter to overwrite this check

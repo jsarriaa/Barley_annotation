@@ -1,0 +1,103 @@
+--- Starting Miniprot Alignment (Direct Execution) ---
+Start time: lun 13 abr 2026 14:56:44 CEST
+Command executed: miniprot -I -u --outn=1 --aln -t 32 miniprot/GDB_136.mpi data/uniref_tax38820_id0.5.fasta > miniprot/GDB_136.uniref_tax38820_id0.5.miniprot.aln
+[M::mp_idx_restore@16.762*1.03] loaded the index
+[M::mp_mapopt_set_max_intron] set max intron size to 235801
+[M::mp_idx_print_stat] 2409882 distinct k-mers; mean occ of infrequent k-mers: 775.72; 9681 frequent k-mers accounting for 328570599 occurrences
+[M::worker_pipeline::67.898*13.11] mapped 34514 sequences
+[M::worker_pipeline::94.096*17.72] mapped 29053 sequences
+[M::worker_pipeline::119.077*20.60] mapped 29966 sequences
+[M::worker_pipeline::169.533*22.23] mapped 20325 sequences
+[M::worker_pipeline::199.231*23.16] mapped 7602 sequences
+[M::worker_pipeline::225.885*23.94] mapped 7057 sequences
+[M::worker_pipeline::274.135*24.77] mapped 8302 sequences
+[M::worker_pipeline::307.869*24.65] mapped 8205 sequences
+[M::worker_pipeline::355.779*23.72] mapped 7753 sequences
+[M::worker_pipeline::383.019*24.27] mapped 7531 sequences
+[M::worker_pipeline::409.650*24.53] mapped 7527 sequences
+[M::worker_pipeline::456.576*23.95] mapped 7952 sequences
+[M::worker_pipeline::481.556*24.34] mapped 11095 sequences
+[M::worker_pipeline::505.224*24.64] mapped 8711 sequences
+[M::worker_pipeline::537.946*24.96] mapped 7137 sequences
+[M::worker_pipeline::581.546*25.08] mapped 8390 sequences
+[M::worker_pipeline::607.254*25.30] mapped 8554 sequences
+[M::worker_pipeline::634.063*25.52] mapped 8230 sequences
+[M::worker_pipeline::675.722*25.73] mapped 9099 sequences
+[M::worker_pipeline::700.100*25.92] mapped 10061 sequences
+[M::worker_pipeline::726.338*26.02] mapped 8293 sequences
+[M::worker_pipeline::765.730*26.05] mapped 5330 sequences
+[M::worker_pipeline::794.590*26.23] mapped 7901 sequences
+[M::worker_pipeline::820.024*26.39] mapped 7773 sequences
+[M::worker_pipeline::865.343*26.67] mapped 8310 sequences
+[M::worker_pipeline::880.841*26.74] mapped 9539 sequences
+[M::worker_pipeline::897.744*26.81] mapped 9711 sequences
+[M::worker_pipeline::914.014*26.87] mapped 9811 sequences
+[M::worker_pipeline::932.007*26.95] mapped 9656 sequences
+[M::worker_pipeline::973.671*26.85] mapped 10173 sequences
+[M::worker_pipeline::1001.975*26.95] mapped 8760 sequences
+[M::worker_pipeline::1035.238*26.92] mapped 7139 sequences
+[M::worker_pipeline::1082.462*27.02] mapped 7145 sequences
+[M::worker_pipeline::1110.366*27.13] mapped 10845 sequences
+[M::worker_pipeline::1139.655*27.19] mapped 11020 sequences
+[M::worker_pipeline::1189.694*27.26] mapped 6148 sequences
+[M::worker_pipeline::1226.992*27.28] mapped 6601 sequences
+[M::worker_pipeline::1275.910*27.42] mapped 7010 sequences
+[M::worker_pipeline::1300.853*27.42] mapped 7689 sequences
+[M::worker_pipeline::1330.599*27.49] mapped 6976 sequences
+[M::worker_pipeline::1383.190*27.61] mapped 6621 sequences
+[M::worker_pipeline::1411.470*27.64] mapped 7053 sequences
+[M::worker_pipeline::1442.764*27.68] mapped 6060 sequences
+[M::worker_pipeline::1488.474*27.75] mapped 5984 sequences
+[M::worker_pipeline::1503.183*27.79] mapped 6253 sequences
+[M::worker_pipeline::1523.340*27.81] mapped 9868 sequences
+[M::worker_pipeline::1545.484*27.85] mapped 10358 sequences
+[M::worker_pipeline::1583.408*27.83] mapped 10536 sequences
+[M::worker_pipeline::1605.551*27.86] mapped 10102 sequences
+[M::worker_pipeline::1631.933*27.91] mapped 9216 sequences
+[M::worker_pipeline::1656.360*27.96] mapped 9056 sequences
+[M::worker_pipeline::1697.423*28.05] mapped 10503 sequences
+[M::worker_pipeline::1731.078*28.08] mapped 4907 sequences
+[M::worker_pipeline::1748.280*28.10] mapped 6579 sequences
+[M::worker_pipeline::1782.513*28.13] mapped 6763 sequences
+[M::worker_pipeline::1802.651*28.15] mapped 6900 sequences
+[M::worker_pipeline::1834.002*28.17] mapped 6314 sequences
+[M::worker_pipeline::1928.290*28.34] mapped 4569 sequences
+[M::worker_pipeline::2028.675*28.44] mapped 4522 sequences
+[M::worker_pipeline::2133.163*28.52] mapped 4471 sequences
+[M::worker_pipeline::2237.646*28.56] mapped 4380 sequences
+[M::worker_pipeline::2333.877*28.64] mapped 5224 sequences
+[M::worker_pipeline::2412.907*28.69] mapped 6127 sequences
+[M::worker_pipeline::2475.014*28.74] mapped 6151 sequences
+[M::worker_pipeline::2519.663*28.69] mapped 6994 sequences
+[M::worker_pipeline::2543.311*28.71] mapped 7067 sequences
+[M::worker_pipeline::2568.154*28.72] mapped 7064 sequences
+[M::worker_pipeline::2628.603*28.69] mapped 6033 sequences
+[M::worker_pipeline::2659.663*28.71] mapped 5190 sequences
+[M::worker_pipeline::2710.971*28.66] mapped 5796 sequences
+[M::worker_pipeline::2738.491*28.65] mapped 10085 sequences
+[M::worker_pipeline::2770.613*28.68] mapped 6943 sequences
+[M::worker_pipeline::2825.908*28.49] mapped 10048 sequences
+[M::worker_pipeline::2839.958*28.50] mapped 6504 sequences
+[M::worker_pipeline::2866.605*28.52] mapped 7903 sequences
+[M::worker_pipeline::2906.582*28.50] mapped 8826 sequences
+[M::worker_pipeline::2928.977*28.50] mapped 7496 sequences
+[M::worker_pipeline::2949.509*28.52] mapped 7474 sequences
+[M::worker_pipeline::2976.149*28.53] mapped 7442 sequences
+[M::worker_pipeline::3020.706*28.54] mapped 7549 sequences
+[M::worker_pipeline::3070.556*28.57] mapped 6935 sequences
+[M::worker_pipeline::3116.112*28.57] mapped 9871 sequences
+[M::worker_pipeline::3157.747*28.58] mapped 7810 sequences
+[M::worker_pipeline::3217.548*28.64] mapped 7335 sequences
+[M::worker_pipeline::3258.533*28.67] mapped 7614 sequences
+[M::worker_pipeline::3316.303*28.69] mapped 7856 sequences
+[M::worker_pipeline::3349.466*28.71] mapped 7885 sequences
+[M::worker_pipeline::3387.818*28.73] mapped 7391 sequences
+[M::worker_pipeline::3457.135*28.62] mapped 7465 sequences
+[M::worker_pipeline::3526.814*28.64] mapped 6280 sequences
+[M::worker_pipeline::3554.863*28.66] mapped 3137 sequences
+[M::main] Version: 0.13-r248
+[M::main] CMD: miniprot -I -u --outn=1 --aln -t 32 miniprot/GDB_136.mpi data/uniref_tax38820_id0.5.fasta
+[M::main] Real time: 3555.146 sec; CPU: 101868.521 sec; Peak RSS: 72.034 GB
+
+End time: lun 13 abr 2026 15:56:00 CEST
+Miniprot alignment completed successfully.

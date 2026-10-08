@@ -1,0 +1,76 @@
+
+#########################################################
+##### Extensive de-novo TE Annotator (EDTA) v2.2.2  #####
+##### Shujun Ou (shujun.ou.1@gmail.com)             #####
+#########################################################
+
+
+Parameters: --genome /scratch/GDB136/new_anno/genome_by_contigs/contig_corrected_v1_2553.fasta --anno 1 --overwrite 1 --threads 16
+
+
+sáb 07 mar 2026 06:48:45 CET	Dependency checking:
+	All passed!
+
+sáb 07 mar 2026 06:48:47 CET	The longest sequence ID in the genome contains 24 characters, which is longer than the limit (13)
+	Trying to reformat seq IDs...
+		Attempt 1...
+sáb 07 mar 2026 06:48:47 CET	Seq ID conversion successful!
+
+sáb 07 mar 2026 06:48:47 CET	Obtain raw TE libraries using various structure-based programs: 
+sáb 07 mar 2026 06:48:47 CET	EDTA_raw: Check dependencies, prepare working directories.
+
+sáb 07 mar 2026 06:48:57 CET	Start to find LTR candidates.
+
+sáb 07 mar 2026 06:48:57 CET	Identify LTR retrotransposon candidates from scratch.
+
+Error: Could not load sequence. Empty file or bad format.
+
+Filter sequence based on TEsorter classifications. Unclassified sequences will also be output to the clean file.
+	Usage: perl cleanup_misclas.pl sequence.fa.rexdb.cls.tsv
+	Author: Shujun Ou (shujun.ou.1@gmail.com) 10/11/2019
+	
+mv: no se puede efectuar `stat' sobre 'contig_corrected_v1_2553.fasta.mod.LTR.intact.fa.ori.dusted.cln.cln': No existe el fichero o el directorio
+mv: no se puede efectuar `stat' sobre 'contig_corrected_v1_2553.fasta.mod.LTR.intact.fa.ori.dusted.cln.cln.list': No existe el fichero o el directorio
+cp: no se puede efectuar `stat' sobre 'contig_corrected_v1_2553.fasta.mod.LTR.intact.raw.fa.anno.list': No existe el fichero o el directorio
+ERROR: No such file or directory at /scratch/software-phgv2/miniconda3/envs/EDTA_env/share/EDTA/bin/output_by_list.pl line 39.
+sáb 07 mar 2026 06:49:16 CET	Finish finding LTR candidates.
+
+sáb 07 mar 2026 06:49:16 CET	Start to find SINE candidates.
+
+sáb 07 mar 2026 06:49:20 CET	Warning: The SINE result file has 0 bp!
+
+sáb 07 mar 2026 06:49:20 CET	Start to find LINE candidates.
+
+sáb 07 mar 2026 06:49:20 CET	Identify LINE retrotransposon candidates from scratch.
+
+sáb 07 mar 2026 06:49:24 CET	Warning: The LINE result file has 0 bp!
+
+sáb 07 mar 2026 06:49:24 CET	Start to find TIR candidates.
+
+sáb 07 mar 2026 06:49:24 CET	Identify TIR candidates from scratch.
+
+Species: others
+sáb 07 mar 2026 06:50:03 CET	Finish finding TIR candidates.
+
+sáb 07 mar 2026 06:50:03 CET	Start to find Helitron candidates.
+
+sáb 07 mar 2026 06:50:03 CET	Identify Helitron candidates from scratch.
+
+Warning: LOC list contig_corrected_v1_2553.fasta.mod.HelitronScanner.raw.ext.list is empty.
+Warning: LOC list contig_corrected_v1_2553.fasta.mod.HelitronScanner.raw.ext.list is empty.
+Error: Could not load sequence. Empty file or bad format.
+
+Filter sequence based on TEsorter classifications. Unclassified sequences will also be output to the clean file.
+	Usage: perl cleanup_misclas.pl sequence.fa.rexdb.cls.tsv
+	Author: Shujun Ou (shujun.ou.1@gmail.com) 10/11/2019
+	
+mv: no se puede efectuar `stat' sobre 'contig_corrected_v1_2553.fasta.mod.HelitronScanner.filtered.fa.pass.fa.dusted.cln.cln': No existe el fichero o el directorio
+cp: no se puede efectuar `stat' sobre 'contig_corrected_v1_2553.fasta.mod.HelitronScanner.filtered.fa.pass.fa.dusted.cln.cln.list': No existe el fichero o el directorio
+cp: no se puede efectuar `stat' sobre 'contig_corrected_v1_2553.fasta.mod.Helitron.intact.raw.fa.anno.list': No existe el fichero o el directorio
+
+	perl make_bed_with_intact.pl EDTA.intact.fa > EDTA.intact.bed 
+
+Error: Helitron results not found!
+
+ERROR: Raw LTR results not found in contig_corrected_v1_2553.fasta.mod.EDTA.raw/contig_corrected_v1_2553.fasta.mod.LTR.raw.fa and contig_corrected_v1_2553.fasta.mod.EDTA.raw/contig_corrected_v1_2553.fasta.mod.LTR.intact.raw.fa
+	If you believe the program is working properly, this may be caused by the lack of intact LTRs in your genome. Consider to use the --force 1 parameter to overwrite this check

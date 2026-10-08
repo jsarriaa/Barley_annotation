@@ -1,0 +1,14 @@
+--- Starting combine_all_hints ---
+Message: Combine all hints
+Start time: vie 17 abr 2026 15:17:49 CEST
+Output GFF: GDB_136/hints.all_combined.gff
+Included: Reference Protein hints (miniprothints/GDB_136_uniref_tax38820.hc.hints.gff)
+Included: RNA-Seq Extrinsic hints (STAR/alignments/hints.intron_extrinsic.gff)
+Included: IsoSeq hints (hints/hints.isoseq.mm2.gff)
+Included: EDTA TE hints (hints/hints.EDTA.gff)
+Total files to combine: 4
+--- Execution ---
+Command: cat miniprothints/GDB_136_uniref_tax38820.hc.hints.gff STAR/alignments/hints.intron_extrinsic.gff hints/hints.isoseq.mm2.gff hints/hints.EDTA.gff | sort -n -k4,4 | sort -s -n -k5,5 | sort -s -k1,1 > GDB_136/hints.all_combined.gff
+
+End time: vie 17 abr 2026 15:21:28 CEST
+All hints combined successfully. Final file: GDB_136/hints.all_combined.gff
