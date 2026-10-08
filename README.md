@@ -2,9 +2,11 @@
 
 ## Overview
 
-This repository contains the complete de novo annotation pipeline for *Hordeum vulgare* subsp. *vulgare* GDB_136, a barley landrace originating from Iraq. The annotation was generated following the same protocols and methodologies as the recent Barley Pangenome v2 [(Nature 2024)](https://www.nature.com/articles/s41586-024-08187-1), in close collaboration with the sequencing and assembly teams at [IPK Gatersleben](https://www.ipk-gatersleben.de/).
+This repository contains the complete de novo annotation pipeline for *Hordeum vulgare* subsp. *vulgare* GDB_136, a barley landrace originating from Iraq. The annotation was generated following the same protocols and methodologies as the recent Barley Pangenome v2 [(Nature 2024)](https://www.nature.com/articles/s41586-024-08187-1), in close collaboration with the sequencing and assembly teams at [IPK Gatersleben](https://www.ipk-gatersleben.de/), and [PGSB group](https://www.helmholtz-munich.de/en/pgsb) in Munich.
 
 The pipeline integrates multiple lines of evidence including RNA-seq transcriptomics, long-read RNA sequencing (Iso-Seq), and protein homology information to produce a comprehensive and high-quality gene annotation. The approach is based on the PanAnno pantranscriptome methodology developed at PGSB-HMGU.
+
+Find here the [original code repo](https://github.com/PGSB-HMGU/pananno) from Thomas Lux. I really appreciate his support and help during the process. 
 
 ### Key Features
 
@@ -53,9 +55,8 @@ The pipeline generates:
    - BUSCO score: 98.6%
 
 2. **Protein Sequences**: 
-   - High confidence (HC, ≥90%): 47,701 proteins
-   - Medium confidence (≥80%): 53,416 proteins
-   - All models: 58,771+ proteins
+   - High confidence 43,697 genes
+   - Low confidence 31,232 genes
 
 3. **Supporting Files**: CDS sequences, functional annotations, TE library
 
@@ -523,7 +524,7 @@ grep -v "#" GDB_136.csic.r1.May2026.low.gff3 | grep "gene" -c   # Low confidence
 
 This pipeline development was supported by:
 - **Thomas Lux** (PGSB-HMGU) - PanAnno methodology and technical guidance
-- **Manuel Spannagle** (PGSB-HMGU) - Pipeline framework and tools
+- **Manuel Spannagl** (PGSB-HMGU) - Pipeline framework and tools
 - **IPK Gatersleben** - Sequencing and assembly coordination
 - **BMK Gene** - RNA-seq library preparation and quality control
 
@@ -531,10 +532,7 @@ This pipeline development was supported by:
 
 ## 8. References
 
-1. Pangenome Consortium (2024). "The barley pan-genome reveals the hidden legacy of polyploidy." *Nature*, 615, 312-322.
-2. Ou, S., et al. (2023). "Benchmarking transposable element annotation methods for creation of a streamlined, comprehensive pipeline." *Genome Biology*, 24, 24.
-3. Loveland, J., et al. (2022). "Comprehensive annotation of transcriptome and proteome from a patient-derived xenograft." *Nucleic Acids Research*, 50(12).
-
+1. Jayakodi M, Padmarasu S, Haberer G, et al. The barley pan-genome reveals the hidden legacy of mutation breeding. Nature. 2020;588(7837):284-289. doi:10.1038/s41586-020-2947-8
 ---
 
 ## 9. Troubleshooting and Notes
@@ -563,4 +561,4 @@ This pipeline documentation and associated scripts are provided for research pur
 
 **Last updated**: October 2026  
 **Pipeline version**: 1.0  
-**Contact**: [Your institution/contact information]
+**Contact**: jsarria@eead.csic.es or  @jsarria99 in X/Twitter
