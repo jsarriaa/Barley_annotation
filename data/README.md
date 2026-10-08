@@ -40,4 +40,5 @@ lrwxrwxrwx 1 jsarria jsarria  132 Feb 25 11:36 Unknown_CP851-001U0015_good_2.fq.
 ```
 
 Find the fastq and BAM from:
-Set here the links to ENA
+Set here the links to ENA when embargo ends
+
